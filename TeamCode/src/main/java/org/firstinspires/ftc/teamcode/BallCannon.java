@@ -1,19 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class ballCannon  {
+public class BallCannon {
     /* активировать моторы по кнопочке
     */
     DcMotor ShootingMotor;
 
-    public void ballCannon(LinearOpMode opMode) {
+
+
+    public void BallCannon(LinearOpMode opMode) {
         ShootingMotor = opMode.hardwareMap.get(DcMotor.class, "ShootingMotor");
 
     }
