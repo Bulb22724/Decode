@@ -20,12 +20,10 @@ public class TeleOp extends LinearOpMode {
                 ballCannon.inverse();
             }
             if(stateButtonB && !gamepad2.b){
-                mode+=1;
-                mode=mode%3;
+                mode=(mode+1)%3;
 
             }
             stateButtonB = gamepad2.b;
-
         }
 
     }
