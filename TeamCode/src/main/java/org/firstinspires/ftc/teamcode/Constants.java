@@ -12,20 +12,20 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Constants {
     public static MecanumConstants driveConstants = new MecanumConstants()
-            .leftFrontMotorName("leftFront")
-            .leftRearMotorName("leftBack")
-            .rightFrontMotorName("rightFront")
-            .rightRearMotorName("rightBack")
+            .leftFrontMotorName("frontLeft")
+            .leftRearMotorName("backLeft")
+            .rightFrontMotorName("frontRight")
+            .rightRearMotorName("backRight")
             .leftFrontMotorDirection(Direction.FORWARD)
             .leftRearMotorDirection(Direction.REVERSE)
             .rightFrontMotorDirection(Direction.FORWARD)
             .rightRearMotorDirection(Direction.FORWARD)
             .maxPower(1);
     public static DriveEncoderConstants encoderConstants = new DriveEncoderConstants()
-            .rightFrontMotorName("rightFront")
-            .rightRearMotorName("rightBack")
-            .leftRearMotorName("leftBack")
-            .leftFrontMotorName("leftFront")
+            .rightFrontMotorName("frontRight")
+            .rightRearMotorName("backRight")
+            .leftRearMotorName("backLeft")
+            .leftFrontMotorName("frontLeft")
             .robotLength(0)
             .robotWidth(0)
             //В режиме настройки OpMode, в разделе «Локализация», выберите и запустите тюнер вперёд. Затем продвиньте робота вперёд на 48 дюймов (ровно на 2 клетки поля). Это расстояние можно настроить при необходимости. После того, как вы продвинете робота вперёд, на экране телеметрии отобразятся два числа:

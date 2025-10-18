@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-public class AutoRidePath {
+@Autonomous
+public class AutoRidePath extends LinearOpMode {
     //позиция робота в начале матча
     private final Pose startPose = new Pose(24, 144, Math.toRadians(180));
     //позиция возле колодца для стрельбы
@@ -27,11 +29,7 @@ public class AutoRidePath {
     private final Pose grabThirdPose = new Pose(12, 36, Math.toRadians(180));
     private Follower follower;
     private PathChain firstScore, fromScoreToFirstColumn, fromScoreToSecondColumn, fromScoreToThirdColumn, toScore;
-    PathBuilder path = follower.pathBuilder()
 
-
-            .addPath(new BezierLine(startPose, scorePose))
-            .setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
 
     public void pathBuild() {
         firstScore = follower.pathBuilder()
@@ -72,12 +70,13 @@ public class AutoRidePath {
 
     }
 
-    public void AutoFollowPath() {
-        if (follower.isBusy()) {
-            follower.followPath(firstScore, true);
-            follower.followPath(fromScoreToFirstColumn);
-            follower.followPath(toScore);
-        }
+    public void runOpMode() {
+        waitForStart();
+        follower = Constants.createFollower(hardwareMap);
+        follower.followPath(firstScore, true);
+        follower.followPath(fromScoreToFirstColumn);
+        follower.followPath(toScore);
+
 
     }
 
