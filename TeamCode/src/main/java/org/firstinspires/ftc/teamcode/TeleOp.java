@@ -1,30 +1,28 @@
 package org.firstinspires.ftc.teamcode;
-
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "Linear OpMode")
 public class TeleOp extends LinearOpMode {
+
     BallCannon ballCannon;
-    boolean stateButtonB;
-    int mode=0;
+
     @Override
     public void runOpMode() throws InterruptedException {
         ballCannon = new BallCannon(hardwareMap);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         waitForStart();
         while (opModeIsActive()) {
-            if (mode==1) {
-                ballCannon.rotate();
-            } else if (mode==0) {
-                ballCannon.stop();
-            } else {
-                ballCannon.inverse();
-            }
-            if(stateButtonB && !gamepad2.b){
-                mode=(mode+1)%3;
-
-            }
-            stateButtonB = gamepad2.b;
+            ballCannon.setPower(gamepad2.right_stick_y);
+            ballCannon.controlShootingMotor(gamepad2.b);
+            telemetry.addData("Mode", ballCannon.mode);
+            telemetry.addData("Velosity", ballCannon.velosityMotor());
+            // 1. выведи все переменные в консол
+            // 2. выведи в консоль управлять
+            telemetry.addLine("b-1нажатие вращение мотора по часовой;b-повторное нажатие вращение мотора против часовой;b-третье нажатие остановка мотора");
+            telemetry.update();
         }
-
     }
 }
