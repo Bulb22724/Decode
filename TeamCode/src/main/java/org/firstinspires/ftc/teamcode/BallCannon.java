@@ -69,12 +69,19 @@ public class BallCannon {
     }
 
     public void controlShootingMotor(boolean g2b) {
-        if (mode == 1) {
-            rotate(motorPower);
-        } else if (mode == 0) {
-            stop();
-        } else {
-            inverse(motorPower);
+        switch (mode) {
+            case 1:
+                rotate(motorPower);
+                break;
+            case 2:
+                inverse(motorPower);
+                break;
+            default:
+            case 0:
+                stop();
+
+
+
         }
         if (stateButtonB && !g2b) {
             mode = (mode + 1) % 3;
