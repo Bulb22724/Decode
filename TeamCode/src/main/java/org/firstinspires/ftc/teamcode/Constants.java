@@ -6,6 +6,7 @@ import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.drivetrains.MecanumConstants;
 import com.pedropathing.ftc.localization.Encoder;
 import com.pedropathing.ftc.localization.constants.DriveEncoderConstants;
+import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -52,7 +53,7 @@ public class Constants {
      * BEZIER_CURVE_SEARCH_LIMIT
      * brakingStart
      */
-    public static PathConstraints pathConstraints = new PathConstraints(0, 0, 0, 0, 0, 0, 0, 0);
+    public static PathConstraints pathConstraints = PathConstraints.defaultConstraints;
 
 
     public static Follower createFollower(HardwareMap hardwareMap) {

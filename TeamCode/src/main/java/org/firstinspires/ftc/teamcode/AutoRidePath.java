@@ -73,10 +73,11 @@ public class AutoRidePath extends LinearOpMode {
     public void runOpMode() {
         waitForStart();
         follower = Constants.createFollower(hardwareMap);
-        follower.followPath(firstScore, true);
-        follower.followPath(fromScoreToFirstColumn);
-        follower.followPath(toScore);
-
+        if (!follower.isBusy()) {
+            follower.followPath(firstScore, true);
+            follower.followPath(fromScoreToFirstColumn);
+            follower.followPath(toScore);
+        }
 
     }
 

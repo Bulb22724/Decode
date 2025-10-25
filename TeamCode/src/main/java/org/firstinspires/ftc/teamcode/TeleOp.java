@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.modules.MechTrain;
-
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends LinearOpMode {
     MechTrain mechTrain;
 
