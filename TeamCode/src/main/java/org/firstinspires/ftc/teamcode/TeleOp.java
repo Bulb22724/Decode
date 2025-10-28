@@ -12,7 +12,7 @@ public class TeleOp extends LinearOpMode {
         mechTrain = new MechTrain(this);
         waitForStart();
         while (opModeIsActive()) {
-            mechTrain.setPowerOnMecanumBase(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.left_trigger - gamepad1.right_trigger);
+            mechTrain.setPowerOnMecanumBase(gamepad1.left_stick_x, gamepad 1.left_stick_y, gamepad1.left_trigger - gamepad1.right_trigger);
         }
     }
 }
