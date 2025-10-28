@@ -11,7 +11,11 @@ import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import java.util.Arrays;
+
 public class Constants {
+    static double[] forwardMultiplier = new double[]{1, 3};
+
     public static MecanumConstants driveConstants = new MecanumConstants()
             .leftFrontMotorName("frontLeft")
             .leftRearMotorName("backLeft")
@@ -27,22 +31,22 @@ public class Constants {
             .rightRearMotorName("backRight")
             .leftRearMotorName("backLeft")
             .leftFrontMotorName("frontLeft")
-            .robotLength(0)
-            .robotWidth(0)
+            .robotLength(15.748)
+            .robotWidth(18.1102)
             //В режиме настройки OpMode, в разделе «Локализация», выберите и запустите тюнер вперёд. Затем продвиньте робота вперёд на 48 дюймов (ровно на 2 клетки поля). Это расстояние можно настроить при необходимости. После того, как вы продвинете робота вперёд, на экране телеметрии отобразятся два числа:
             //
             //Расстояние, которое, по мнению робота, он преодолел
             //Множитель — это число, которое вам нужно.
-            .forwardTicksToInches(0)
+            .forwardTicksToInches(Arrays.stream(forwardMultiplier).sum()/forwardMultiplier.length)
             //Боковой тюнер очень похож на передний, но расположен сбоку. В режиме настройки, в разделе локализации, выберите и запустите боковой тюнер. Сдвиньте робота влево на 48 дюймов (ровно на 2 клетки поля). Как и в случае с передним тюнером, это расстояние можно настроить.
-            .strafeTicksToInches(0)
+            .strafeTicksToInches(1)
             //Поворотный тюнер, как и тюнеры прямого и бокового направления, работает аналогично поворотному. Разместите робота так, чтобы он был выровнен по фиксированной точке отсчёта (например, краю плитки поля). В режиме настройки, в разделе локализации, выберите и запустите боковой тюнер. Поверните робота против часовой стрелки на один полный оборот . Как и в случае с предыдущими тюнерами, этот угол можно настраивать.
-            .turnTicksToInches(0)
+            .turnTicksToInches(1)
             .leftFrontEncoderDirection(Encoder.FORWARD)
             .leftRearEncoderDirection(Encoder.FORWARD)
             .rightFrontEncoderDirection(Encoder.FORWARD)
             .rightRearEncoderDirection(Encoder.FORWARD);
-    public static FollowerConstants followerConstants = new FollowerConstants().mass(0);
+    public static FollowerConstants followerConstants = new FollowerConstants().mass(5);
     /**
      * tValueConstraint
      * velocityConstraint
