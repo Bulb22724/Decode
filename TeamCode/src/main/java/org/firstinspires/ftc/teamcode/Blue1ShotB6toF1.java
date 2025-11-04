@@ -11,33 +11,41 @@ import org.firstinspires.ftc.teamcode.modules.MechTrain;
 
 public class Blue1ShotB6toF1 extends LinearOpMode {
     private ElapsedTime timer = new ElapsedTime();
+
     public void runOpMode() {
         waitForStart();
         BallCannon ballCannon = new BallCannon(hardwareMap);
-        double motorPower = 1;
+        MechTrain mechTrain = new MechTrain(this);
         if (opModeIsActive()) {
             // стреляем
-            ballCannon.inverse(motorPower);
-            double durationForPushingBallNs = 3.5e9;
-            double durationForShootingBallNs = 3e9;
-            double durationForPushingBalls = 1e9;
-            timer.reset();
-            ballCannon.controlShootingMotor(true);
-            ballCannon.controlShootingMotor(true);
-            while (!(durationForShootingBallNs <timer.nanoseconds())) {
-            }
-            ballCannon.controlBallPushingMotor(true);
-            while (!(durationForPushingBallNs < timer.nanoseconds())) {
-            }
-            ballCannon.controlBallPushingMotor(false);
-            ballCannon.controlShootingMotor(true);
-            //mechTrain.moveBackRight(1,Math.sqrt(2)*48);
-            MechTrain mechTrain = new MechTrain(this);
-            mechTrain.moveBack(1, 48);
-            mechTrain.moveLeft(1, 120);
-            mechTrain.moveBack(1, 48);
-        }
+            
+            double ShootingTime = 3;
+            double pushingTime = 1;
 
+            mechTrain.moveBack(0.5,18);
+            
+            ballCannon.rotate(0.75);
+            timer.reset();
+            while (ShootingTime > timer.seconds() && opModeIsActive()) {
+            }
+            ballCannon.controlBallPushingMotor(false, true);
+
+            timer.reset();
+            while (pushingTime > timer.seconds() && opModeIsActive()) {
+            }
+            ballCannon.controlBallPushingMotor(true, false);
+            timer.reset();
+            while (pushingTime > timer.seconds() && opModeIsActive()) {
+            }
+            ballCannon.controlBallPushingMotor(false, false);
+            ballCannon.stop();
+            //mechTrain.moveBackRight(1,Math.sqrt(2)*48);
+//            MechTrain mechTrain = new MechTrain(this);
+//            mechTrain.moveBack(1, 48);
+//            mechTrain.moveLeft(1, 120);
+//            mechTrain.moveBack(1, 48);
+        }
     }
 
 }
+

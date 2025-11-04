@@ -1,19 +1,27 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class MechTrain {
     DcMotor frontLeft, frontRight, backLeft, backRight;
     double encoderResolution = 537.7;
     int wheelDiameterMM =104;
+    LinearOpMode opMode;
     public MechTrain(LinearOpMode opMode) {
         frontLeft = opMode.hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = opMode.hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = opMode.hardwareMap.get(DcMotor.class, "backLeft");
         backRight = opMode.hardwareMap.get(DcMotor.class, "backRight");
-    }
 
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        this.opMode = opMode;
+    }
     /**
      * Подает мощность на моторы по трем осям
      *
@@ -49,17 +57,17 @@ public class MechTrain {
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         setPowerOnMecanumBase(motorPowerX, motorPowerY, 0);
-        while (frontLeft.getPower() != 0 && frontRight.getPower() != 0 && backLeft.getPower() != 0 && backRight.getPower() != 0) {
-            if (Math.abs(frontRight.getCurrentPosition()) < targetPosition) {
+        while (((frontLeft.getPower() != 0 || frontRight.getPower() != 0 || backLeft.getPower() != 0 || backRight.getPower() != 0)) && opMode.opModeIsActive()){
+            if (Math.abs(frontRight.getCurrentPosition()) > targetPosition) {
                 frontRight.setPower(0);
             }
-            if (Math.abs(frontLeft.getCurrentPosition()) < targetPosition) {
+            if (Math.abs(frontLeft.getCurrentPosition()) > targetPosition) {
                 frontLeft.setPower(0);
             }
-            if (Math.abs(backRight.getCurrentPosition()) < targetPosition) {
+            if (Math.abs(backRight.getCurrentPosition()) > targetPosition) {
                 backRight.setPower(0);
             }
-            if (Math.abs(backLeft.getCurrentPosition()) < targetPosition) {
+            if (Math.abs(backLeft.getCurrentPosition()) > targetPosition) {
                 backLeft.setPower(0);
             }
         }
@@ -82,7 +90,7 @@ public class MechTrain {
         rideTic(motorPower,0,targetPosition);
     }
     public void moveBack(double motorPower,double targetPosition){
-        rideTic(-motorPower,0,targetPosition);
+        rideTic(0,motorPower,targetPosition);
     }
     public void moveRight(double motorPower,double targetPosition){
         rideTic(0,motorPower,targetPosition);

@@ -22,21 +22,24 @@ public class Red1ShotE6toA1 extends LinearOpMode {
             double durationForShootingBallNs = 3e9;
             double durationForPushingBalls = 1e9;
             timer.reset();
-            ballCannon.controlShootingMotor(true);
-            ballCannon.controlShootingMotor(true);
-            while (!(durationForShootingBallNs <timer.nanoseconds())) {
+            ballCannon.inverse(1);
+            while (durationForShootingBallNs < timer.nanoseconds() && opModeIsActive()) {
             }
-            ballCannon.controlBallPushingMotor(true);
-            while (!(durationForPushingBallNs < timer.nanoseconds())) {
+            ballCannon.controlBallPushingMotor(true,false);
+            while (durationForPushingBallNs < timer.nanoseconds() && opModeIsActive()){
             }
-            ballCannon.controlBallPushingMotor(false);
-            ballCannon.controlShootingMotor(true);
+            ballCannon.controlBallPushingMotor(false,true);
+            while (durationForPushingBallNs < timer.nanoseconds()  && opModeIsActive()) {
+            }
+            ballCannon.controlBallPushingMotor(false,false);
+            ballCannon.stop();
             //mechTrain.moveBackRight(1,Math.sqrt(2)*48);
-            MechTrain mechTrain = new MechTrain(this);
-            mechTrain.moveBack(1, 48);
-            mechTrain.moveRight(1, 120);
-            mechTrain.moveBack(1, 48);
+//            MechTrain mechTrain = new MechTrain(this);
+//            mechTrain.moveBack(1, 48);
+//            mechTrain.moveRight(1, 120);
+//            mechTrain.moveBack(1, 48);
         }
     }
 
 }
+
