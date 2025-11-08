@@ -12,16 +12,17 @@ public class TeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        ballCannon = new BallCannon(hardwareMap);
+        ballCannon = new BallCannon(this);
 //        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         mechTrain = new MechTrain(this);
+
         waitForStart();
         while (opModeIsActive()) {
            mechTrain.setPowerOnMecanumBase(0.75*gamepad1.left_stick_x, 0.75*gamepad1.left_stick_y, 0.75*(gamepad1.left_trigger - gamepad1.right_trigger));
             ballCannon.setPower(-gamepad2.right_stick_y);
-            ballCannon.controlShootingMotor(gamepad2.b);
-            telemetry.addData("Mode", ballCannon.mode);
+            ballCannon.Shoot(gamepad2.a);
+            ballCannon.inverseDirection(gamepad2.b);
             telemetry.addData("Velosity", ballCannon.velosityMotor());
             // 1. выведи все переменные в консол
             // 2. выведи в консоль управлять
@@ -31,9 +32,13 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("ballPushingMotorPos", ballCannon.ballPushingMotor.getTargetPosition());
 
 
-            telemetry.addLine("b-1нажатие вращение мотора по часовой;b-повторное нажатие вращение мотора против часовой;b-третье нажатие остановка мотора");
+            telemetry.addLine("a gamepad 2-включение/выключение shootingMotor;" +
+                    "b gamepad 2-изменение направления shootingMotor;" +
+                    "x gamepad 2-толкание шара" +
+                    "правый джойстик gamepad 2- вверх/вниз управление мощностью мотора срельбы "+
+                    "левый джойстик gamepad 1- езда робота по соответствующим направлениям");
             telemetry.update();
-            ballCannon.controlBallPushingMotor(gamepad2.x, gamepad2.y);
+            ballCannon.controlBallPushingMotor(gamepad2.x);
 
         }
     }
