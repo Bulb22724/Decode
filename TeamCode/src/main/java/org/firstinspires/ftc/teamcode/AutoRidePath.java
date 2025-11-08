@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.Tuning.follower;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -34,7 +36,7 @@ public class AutoRidePath extends LinearOpMode {
     public void pathBuild() {
         firstScore = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, scorePose))
-                .setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading())
+                .setLinearHeadingInterpolation(follower.getPose().getHeading(), scorePose.getHeading())
                 .build();
 
         fromScoreToFirstColumn = follower.pathBuilder()
@@ -71,12 +73,15 @@ public class AutoRidePath extends LinearOpMode {
     }
 
     public void runOpMode() {
-        waitForStart();
         follower = Constants.createFollower(hardwareMap);
+        follower.update();
+        follower.activateAllPIDFs();
+        waitForStart();
+        follower.update();
         pathBuild();
 
         if (!follower.isBusy()) {
-            follower.followPath(firstScore, true);
+            follower.followPath(firstScore);
             follower.followPath(fromScoreToFirstColumn);
             follower.followPath(toScore);
         }
