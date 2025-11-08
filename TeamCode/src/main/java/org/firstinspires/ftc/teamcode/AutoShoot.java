@@ -2,21 +2,19 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.modules.MechTrain;
 
 @Autonomous
 
-public class Blue1ShotB6toF1 extends LinearOpMode {
+public class AutoShoot extends LinearOpMode {
     private ElapsedTime timer = new ElapsedTime();
 
     public void runOpMode() {
         waitForStart();
         BallCannon ballCannon = new BallCannon(this);
         MechTrain mechTrain = new MechTrain(this);
-        if (opModeIsActive()) {
             // стреляем
             
             double shootingTime = 3;
@@ -42,7 +40,6 @@ public class Blue1ShotB6toF1 extends LinearOpMode {
 //            mechTrain.moveLeft(1, 120);
 //            mechTrain.moveBack(1, 48);
         }
-    }
 
 }
 

@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,17 +17,19 @@ public class BallCannon {
     boolean stateButtonB = false;
     boolean stateButtonA = false;
 
+    LinearOpMode opMode;
+
     /**
      * HardwareMap это карта устройств
      * <p>
      * BallCannon это конструктор который принимает как аргумент карту устройств
      *
-     * @param hard
+     * @param opMode
      */
-    public BallCannon(HardwareMap hard) {
-        shootingMotor = hard.get(DcMotorEx.class, "shootingMotor");
+    public BallCannon(LinearOpMode opMode) {
+        shootingMotor = opMode.hardwareMap.get(DcMotorEx.class, "shootingMotor");
         shootingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        ballPushingMotor = hard.get(DcMotorEx.class, "ballPushingMotor");
+        ballPushingMotor = opMode.hardwareMap.get(DcMotorEx.class, "ballPushingMotor");
         ballPushingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
@@ -101,39 +103,31 @@ public class BallCannon {
             ballPushingMotor.setTargetPosition(72);
             ballPushingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            while (ballPushingMotor.isBusy()) {
-                delay(10);
-            }
+            while (ballPushingMotor.isBusy());
             ballPushingMotor.setPower(0);
         } else {
             ballPushingMotor.setTargetPosition(0);
             ballPushingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (ballPushingMotor.isBusy()) {
-                delay(10);
-            }
+            while (ballPushingMotor.isBusy());
             ballPushingMotor.setPower(0);
         }
     }
 
 
-    /**
-     * delay позволяет сделать задержку между действиями
-     *
-     * @param seconds время сколько ждать в секундах
-     */
-    public void delay(double seconds) {
-        ElapsedTime time = new ElapsedTime();
-
-        double startTime = time.seconds();
-        while (time.seconds() - startTime < seconds) {
-            //ждем
-        }
-    }
-    public void rotatePushingMotor(){
+    public void rotatePushingMotor() {
         ballPushingMotor.setPower(1);
     }
-    public void stopPushingMotor(){
+
+    public void stopPushingMotor() {
         ballPushingMotor.setPower(0);
+    }
+
+    public void rotateShootingMotor() {
+        shootingMotor.setPower(1);
+    }
+
+    public void stopShootingMotor() {
+        shootingMotor.setPower(0);
     }
 
 }
