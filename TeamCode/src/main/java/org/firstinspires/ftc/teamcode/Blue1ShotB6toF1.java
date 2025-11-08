@@ -21,24 +21,26 @@ public class Blue1ShotB6toF1 extends LinearOpMode {
             
             double ShootingTime = 3;
             double pushingTime = 1;
+            double buttonTime = 0.1
 
             mechTrain.moveBack(0.5,18);
             
-            ballCannon.rotate(0.75);
+            ballCannon.Shoot(true);
+            timer.reset();
+
+
             timer.reset();
             while (ShootingTime > timer.seconds() && opModeIsActive()) {
             }
-            ballCannon.controlBallPushingMotor(false, true);
+            ballCannon.rotatePushingMotor();
 
             timer.reset();
             while (pushingTime > timer.seconds() && opModeIsActive()) {
             }
-            ballCannon.controlBallPushingMotor(true, false);
-            timer.reset();
-            while (pushingTime > timer.seconds() && opModeIsActive()) {
-            }
-            ballCannon.controlBallPushingMotor(false, false);
-            ballCannon.stop();
+
+
+
+            ballCannon.stopPushingMotor();
             //mechTrain.moveBackRight(1,Math.sqrt(2)*48);
 //            MechTrain mechTrain = new MechTrain(this);
 //            mechTrain.moveBack(1, 48);
