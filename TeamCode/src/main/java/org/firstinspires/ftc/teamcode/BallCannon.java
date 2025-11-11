@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class BallCannon {
     /* активировать моторы по кнопочке
      */ DcMotorEx shootingMotor;
@@ -73,6 +75,10 @@ public class BallCannon {
     public double velosityMotor() {
         return shootingMotor.getVelocity() / 384.5;
 
+    }
+    public void telem() {
+        Telemetry telemetry = opMode.telemetry;
+        telemetry.addData("скорость колеса пушки", velosityMotor());
     }
 
     public void Shoot(boolean g2a) {

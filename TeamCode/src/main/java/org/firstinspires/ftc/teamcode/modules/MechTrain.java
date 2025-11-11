@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import android.graphics.Path;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MechTrain {
     DcMotor frontLeft, frontRight, backLeft, backRight;
@@ -21,6 +25,16 @@ public class MechTrain {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         this.opMode = opMode;
+    }
+    public void telem() {
+        Telemetry telemetry = opMode.telemetry;
+        telemetry.addData("Позиция переднего левого мотора", frontLeft.getCurrentPosition());
+        telemetry.addData("Позиция переднего правого мотора", frontRight.getCurrentPosition());
+        telemetry.addData("Позиция заднего левого мотора", backLeft.getCurrentPosition());
+        telemetry.addData("Позиция заднего правого мотора", backRight.getCurrentPosition());
+        for (DcMotor motor: new DcMotor[]{frontLeft, frontRight, backLeft}){
+            telemetry.addData("Power", motor.getPower());
+        }
     }
     /**
      * Подает мощность на моторы по трем осям
@@ -66,10 +80,12 @@ public class MechTrain {
             }
             if (Math.abs(backRight.getCurrentPosition()) > targetPosition) {
                 backRight.setPower(0);
-            }
-            if (Math.abs(backLeft.getCurrentPosition()) > targetPosition) {
+                //Удалить после починки энкодера
                 backLeft.setPower(0);
             }
+//            if (Math.abs(backLeft.getCurrentPosition()) > targetPosition) {
+//                backLeft.setPower(0);
+//            }
         }
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

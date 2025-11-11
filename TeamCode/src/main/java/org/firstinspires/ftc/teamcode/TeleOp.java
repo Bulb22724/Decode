@@ -23,6 +23,7 @@ public class TeleOp extends LinearOpMode {
             ballCannon.setPower(-gamepad2.right_stick_y);
             ballCannon.Shoot(gamepad2.a);
             ballCannon.inverseDirection(gamepad2.b);
+
             telemetry.addData("Velosity", ballCannon.velosityMotor());
             // 1. выведи все переменные в консол
             // 2. выведи в консоль управлять
@@ -37,6 +38,7 @@ public class TeleOp extends LinearOpMode {
                     "x gamepad 2-толкание шара" +
                     "правый джойстик gamepad 2- вверх/вниз управление мощностью мотора срельбы "+
                     "левый джойстик gamepad 1- езда робота по соответствующим направлениям");
+            mechTrain.telem();
             telemetry.update();
             ballCannon.controlBallPushingMotor(gamepad2.x);
 
