@@ -10,9 +10,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MechTrain {
     DcMotor frontLeft, frontRight, backLeft, backRight;
-    double encoderResolution = 537.7;
-    int wheelDiameterMM =104;
+    double encoderResolution = 751.8;
+    int wheelDiameterMM = 104;
     LinearOpMode opMode;
+
     public MechTrain(LinearOpMode opMode) {
         frontLeft = opMode.hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = opMode.hardwareMap.get(DcMotor.class, "frontRight");
@@ -26,16 +27,17 @@ public class MechTrain {
 
         this.opMode = opMode;
     }
+
     public void telem() {
         Telemetry telemetry = opMode.telemetry;
-        telemetry.addData("Позиция переднего левого мотора", frontLeft.getCurrentPosition());
-        telemetry.addData("Позиция переднего правого мотора", frontRight.getCurrentPosition());
-        telemetry.addData("Позиция заднего левого мотора", backLeft.getCurrentPosition());
-        telemetry.addData("Позиция заднего правого мотора", backRight.getCurrentPosition());
-        for (DcMotor motor: new DcMotor[]{frontLeft, frontRight, backLeft}){
-            telemetry.addData("Power", motor.getPower());
+        telemetry.addLine("мощности, позиции и растояние моторов 1-передний левый мотор 2-передний правый мотор 3-задний левый мотор 4-задний правый мотор");
+        for (DcMotor motor : new DcMotor[]{frontLeft, frontRight, backLeft, backRight}) {
+            telemetry.addData("Мощность", motor.getPower());
+            telemetry.addData("Позиция", motor.getCurrentPosition());
+            telemetry.addData("Растояние", (motor.getCurrentPosition()/encoderResolution)*wheelDiameterMM*Math.PI);
         }
     }
+
     /**
      * Подает мощность на моторы по трем осям
      *
@@ -54,14 +56,15 @@ public class MechTrain {
     /**
      * rideTic едет с мощностью motorPowerY вперед или назад до позиции targetPosition
      * и с мощиностью motorPowerX вправо или лево до позиции targetPosition
-     *targetPosition измеряется в дюймах
-     * @param motorPowerY мощность движения по оси Y тоесть при движении вперед или назад
-     * @param motorPowerX мощьность движения по оси X тоесть при движении в право или лево
+     * targetPosition измеряется в дюймах
+     *
+     * @param motorPowerY    мощность движения по оси Y тоесть при движении вперед или назад
+     * @param motorPowerX    мощьность движения по оси X тоесть при движении в право или лево
      * @param targetPosition > 0 - целевая позиция
      */
-    public void rideTic(double motorPowerX,double motorPowerY, double targetPosition) {
+    public void rideTic(double motorPowerX, double motorPowerY, double targetPosition) {
 
-        targetPosition = Math.abs((targetPosition*encoderResolution*25.4)/(Math.PI* wheelDiameterMM));
+        targetPosition = Math.abs((targetPosition * encoderResolution * 25.4) / (Math.PI * wheelDiameterMM));
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -71,7 +74,7 @@ public class MechTrain {
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         setPowerOnMecanumBase(motorPowerX, motorPowerY, 0);
-        while (((frontLeft.getPower() != 0 || frontRight.getPower() != 0 || backLeft.getPower() != 0 || backRight.getPower() != 0)) && opMode.opModeIsActive()){
+        while (((frontLeft.getPower() != 0 || frontRight.getPower() != 0 || backLeft.getPower() != 0 || backRight.getPower() != 0)) && opMode.opModeIsActive()) {
             if (Math.abs(frontRight.getCurrentPosition()) > targetPosition) {
                 frontRight.setPower(0);
             }
@@ -99,31 +102,39 @@ public class MechTrain {
      * moveRight движение вправо с мощьностью motorPower до позиции targetPosition
      * moveLeft движение влево с мощьностью motorPower до позиции targetPosition
      * moveForvard движение вперед с мощьностью motorPower до позиции targetPosition
+     *
      * @param motorPower
      * @param targetPosition
      */
-    public void moveForward(double motorPower,double targetPosition){
-        rideTic(motorPower,0,targetPosition);
+    public void moveForward(double motorPower, double targetPosition) {
+        rideTic(motorPower, 0, targetPosition);
     }
-    public void moveBack(double motorPower,double targetPosition){
-        rideTic(0,motorPower,targetPosition);
+
+    public void moveBack(double motorPower, double targetPosition) {
+        rideTic(0, motorPower, targetPosition);
     }
-    public void moveRight(double motorPower,double targetPosition){
-        rideTic(0,motorPower,targetPosition);
+
+    public void moveRight(double motorPower, double targetPosition) {
+        rideTic(0, motorPower, targetPosition);
     }
-    public void moveLeft(double motorPower,double targetPosition){
-        rideTic(0,-motorPower,targetPosition);
+
+    public void moveLeft(double motorPower, double targetPosition) {
+        rideTic(0, -motorPower, targetPosition);
     }
-    public void moveForwardRight(double motorPower,double targetPosition){
-        rideTic(motorPower,motorPower,targetPosition);
+
+    public void moveForwardRight(double motorPower, double targetPosition) {
+        rideTic(motorPower, motorPower, targetPosition);
     }
-    public void moveForwardLeft(double motorPower,double targetPosition){
-        rideTic(motorPower,-motorPower,targetPosition);
+
+    public void moveForwardLeft(double motorPower, double targetPosition) {
+        rideTic(motorPower, -motorPower, targetPosition);
     }
-    public void moveBackRight(double motorPower,double targetPosition){
-        rideTic(-motorPower,motorPower,targetPosition);
+
+    public void moveBackRight(double motorPower, double targetPosition) {
+        rideTic(-motorPower, motorPower, targetPosition);
     }
-    public void moveBackLeft(double motorPower,double targetPosition){
-        rideTic(-motorPower,-motorPower,targetPosition);
+
+    public void moveBackLeft(double motorPower, double targetPosition) {
+        rideTic(-motorPower, -motorPower, targetPosition);
     }
 }
