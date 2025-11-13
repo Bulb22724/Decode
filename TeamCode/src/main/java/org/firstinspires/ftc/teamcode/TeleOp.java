@@ -24,7 +24,7 @@ public class TeleOp extends LinearOpMode {
             ballCannon.Shoot(gamepad2.a);
             ballCannon.inverseDirection(gamepad2.b);
 
-            telemetry.addData("Velosity", ballCannon.velosityMotor());
+            telemetry.addData("Velosity", ballCannon.velocityMotor());
             // 1. выведи все переменные в консол
             // 2. выведи в консоль управлять
             telemetry.addData("ballPushingMotorPos", ballCannon.ballPushingMotor.getCurrentPosition());

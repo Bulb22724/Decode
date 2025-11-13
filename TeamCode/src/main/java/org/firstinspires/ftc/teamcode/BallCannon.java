@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -15,6 +13,7 @@ public class BallCannon {
 
     //
     double motorPower = 0;
+    double radius = 0.082;
     boolean modeShootingMotor = false;
     boolean stateButtonB = false;
     boolean stateButtonA = false;
@@ -72,13 +71,14 @@ public class BallCannon {
 //    public void inverse(double motorPower) {
 //        shootingMotor.setPower(-motorPower);
 //    }
-    public double velosityMotor() {
-        return shootingMotor.getVelocity() / 384.5;
+    public double velocityMotor() {
+        return radius * 3.14 * 2 * (shootingMotor.getVelocity() / 384.5);
 
     }
+
     public void telem() {
         Telemetry telemetry = opMode.telemetry;
-        telemetry.addData("скорость колеса пушки", velosityMotor());
+        telemetry.addData("скорость колеса пушки", velocityMotor());
     }
 
     public void Shoot(boolean g2a) {
@@ -104,19 +104,24 @@ public class BallCannon {
      * @param g2x состояние кнопки d на 2-м джойстике
      */
     public void controlBallPushingMotor(boolean g2x) {
-        ballPushingMotor.setPower(1);
         if (g2x) {
-            ballPushingMotor.setTargetPosition(72);
-            ballPushingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            while (ballPushingMotor.isBusy());
-            ballPushingMotor.setPower(0);
+            ballPushingMotor.setPower(1);
         } else {
-            ballPushingMotor.setTargetPosition(0);
-            ballPushingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (ballPushingMotor.isBusy());
             ballPushingMotor.setPower(0);
         }
+//        ballPushingMotor.setPower(1);
+//        if (g2x) {
+//            ballPushingMotor.setTargetPosition(72);
+//            ballPushingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//            while (ballPushingMotor.isBusy());
+//            ballPushingMotor.setPower(0);
+//        } else {
+//            ballPushingMotor.setTargetPosition(0);
+//            ballPushingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            while (ballPushingMotor.isBusy());
+//            ballPushingMotor.setPower(0);
+//        }
     }
 
 
