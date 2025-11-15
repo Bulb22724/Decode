@@ -1,24 +1,33 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
+@Config
 public class BallCannon {
     /* активировать моторы по кнопочке
      */ DcMotorEx shootingMotor;
-    DcMotorEx ballPushingMotor;
+    Servo ballPushingServo;
+    DcMotorEx ballPushingRotateMotor;
 
     //
     double motorPower = 0;
     boolean modeShootingMotor = false;
     boolean stateButtonB = false;
     boolean stateButtonA = false;
+    public static double pushPower = 1;
+    public  static  double shootPower = 1;
+    public static double timerForShoot = 2;
+    public static double timeForPush = 4;
+    public static double nullPosition = 0;
+    public static double ballPushingPosition = 1;
 
+    ElapsedTime timer = new ElapsedTime();
     LinearOpMode opMode;
 
     /**
@@ -31,8 +40,9 @@ public class BallCannon {
     public BallCannon(LinearOpMode opMode) {
         shootingMotor = opMode.hardwareMap.get(DcMotorEx.class, "shootingMotor");
         shootingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        ballPushingMotor = opMode.hardwareMap.get(DcMotorEx.class, "ballPushingMotor");
-        ballPushingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        ballPushingServo = opMode.hardwareMap.get(Servo.class, "ballPushingServo");
+        ballPushingRotateMotor = opMode.hardwareMap.get(DcMotorEx.class, "ballPushingRotateMotor");
+        ballPushingRotateMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
     }
 
@@ -81,6 +91,10 @@ public class BallCannon {
         telemetry.addData("скорость колеса пушки", velosityMotor());
     }
 
+    /**
+     * Метод для выстрела при нажатии кнопки A
+     * @param g2a кнопка A на втором геймпаде
+     */
     public void Shoot(boolean g2a) {
         if (stateButtonA && !g2a) {
             modeShootingMotor = !modeShootingMotor;
@@ -93,6 +107,10 @@ public class BallCannon {
         stateButtonA = g2a;
     }
 
+    /**
+     * меняет направление вращения мотора для выстрела при нажатии кнопки B
+     * @param g2b кнопка B на втором геймпаде
+     */
     public void inverseDirection(boolean g2b) {
         if (stateButtonB && !g2b) {
             motorPower = -motorPower;
@@ -101,32 +119,48 @@ public class BallCannon {
     }
 
     /**
-     * @param g2x состояние кнопки d на 2-м джойстике
+     * Метод для подталкивания мяча и выстреле при вызове
      */
-    public void controlBallPushingMotor(boolean g2x) {
-        ballPushingMotor.setPower(1);
-        if (g2x) {
-            ballPushingMotor.setTargetPosition(72);
-            ballPushingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    public void Shoot() {
+        timer.reset();
+        shootingMotor.setPower(shootPower);
+        while (timerForShoot < timer.seconds());
+        ballPushingServo.setPosition(ballPushingPosition);
+        ballPushingRotateMotor.setPower(pushPower);
+        timer.reset();
+        while (timeForPush < timer.seconds());
+        ballPushingServo.setPosition(nullPosition);
+        ballPushingRotateMotor.setPower(0);
+        shootingMotor.setPower(0);
 
-            while (ballPushingMotor.isBusy());
-            ballPushingMotor.setPower(0);
-        } else {
-            ballPushingMotor.setTargetPosition(0);
-            ballPushingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (ballPushingMotor.isBusy());
-            ballPushingMotor.setPower(0);
-        }
     }
+    /**
+     * @param /g2x состояние кнопки d на 2-м джойстике
+     */
+//    public void controlBallPushingMotor(boolean g2x) {
+//        ballPushingServo.setPower(1);
+//        if (g2x) {
+//            ballPushingServo.setTargetPosition(72);
+//            ballPushingServo.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//            while (ballPushingServo.isBusy());
+//            ballPushingServo.setPower(0);
+//        } else {
+//            ballPushingServo.setTargetPosition(0);
+//            ballPushingServo.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            while (ballPushingServo.isBusy());
+//            ballPushingServo.setPower(0);
+//        }
+//    }
 
-
-    public void rotatePushingMotor() {
-        ballPushingMotor.setPower(1);
-    }
-
-    public void stopPushingMotor() {
-        ballPushingMotor.setPower(0);
-    }
+//
+//    public void rotatePushingMotor() {
+//        ballPushingServo.setPower(1);
+//    }
+//
+//    public void stopPushingMotor() {
+//        ballPushingServo.setPower(0);
+//    }
 
     public void rotateShootingMotor() {
         shootingMotor.setPower(1);
