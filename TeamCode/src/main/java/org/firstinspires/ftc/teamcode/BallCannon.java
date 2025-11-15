@@ -17,6 +17,7 @@ public class BallCannon {
 
     //
     double motorPower = 0;
+    double radius = 0.082;
     boolean modeShootingMotor = false;
     boolean stateButtonB = false;
     boolean stateButtonA = false;
@@ -82,13 +83,14 @@ public class BallCannon {
 //    public void inverse(double motorPower) {
 //        shootingMotor.setPower(-motorPower);
 //    }
-    public double velosityMotor() {
-        return shootingMotor.getVelocity() / 384.5;
+    public double velocityMotor() {
+        return radius * 3.14 * 2 * (shootingMotor.getVelocity() / 384.5);
 
     }
+
     public void telem() {
         Telemetry telemetry = opMode.telemetry;
-        telemetry.addData("скорость колеса пушки", velosityMotor());
+        telemetry.addData("скорость колеса пушки", velocityMotor());
     }
 
     /**

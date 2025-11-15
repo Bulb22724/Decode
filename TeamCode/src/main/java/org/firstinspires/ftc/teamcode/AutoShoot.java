@@ -15,11 +15,10 @@ public class AutoShoot extends LinearOpMode {
         waitForStart();
         BallCannon ballCannon = new BallCannon(this);
         MechTrain mechTrain = new MechTrain(this);
-            // стреляем
-            
-            double shootingTime = 3;
-            double pushingTime = 1;
+        // стреляем
 
+        double shootingTime = 3;
+        double pushingTime = 1;
 
             mechTrain.moveBack(0.5,18);
             
@@ -29,7 +28,7 @@ public class AutoShoot extends LinearOpMode {
 //            mechTrain.moveBack(1, 48);
 //            mechTrain.moveLeft(1, 120);
 //            mechTrain.moveBack(1, 48);
-        }
+    }
 
 }
 
