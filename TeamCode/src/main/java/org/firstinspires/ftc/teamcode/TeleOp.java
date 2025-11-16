@@ -1,15 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 //import com.acmerobotics.dashboard.FtcDashboard;
 //import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.modules.MechTrain;
 
+@Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "Linear OpMode")
+
 public class TeleOp extends LinearOpMode {
     MechTrain mechTrain;
 
     BallCannon ballCannon;
 
+    boolean stateButtonA = false;
     @Override
     public void runOpMode() throws InterruptedException {
         ballCannon = new BallCannon(this);
@@ -20,8 +26,11 @@ public class TeleOp extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
            mechTrain.setPowerOnMecanumBase(0.75*gamepad1.left_stick_x, 0.75*gamepad1.left_stick_y, 0.75*(gamepad1.left_trigger - gamepad1.right_trigger));
-            ballCannon.setPower(-gamepad2.right_stick_y);
-            ballCannon.Shoot(gamepad2.a);
+//            ballCannon.setPower(-gamepad2.right_stick_y);
+            if (stateButtonA && !gamepad2.a) {
+                ballCannon.Shoot();
+            }
+            stateButtonA = gamepad2.a;
             ballCannon.inverseDirection(gamepad2.b);
 
             telemetry.addData("Velosity", ballCannon.velocityMotor());

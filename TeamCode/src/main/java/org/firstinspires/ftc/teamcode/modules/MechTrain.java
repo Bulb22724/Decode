@@ -77,15 +77,16 @@ public class MechTrain {
         while (((frontLeft.getPower() != 0 || frontRight.getPower() != 0 || backLeft.getPower() != 0 || backRight.getPower() != 0)) && opMode.opModeIsActive()) {
             if (Math.abs(frontRight.getCurrentPosition()) > targetPosition) {
                 frontRight.setPower(0);
+                backRight.setPower(0);
             }
             if (Math.abs(frontLeft.getCurrentPosition()) > targetPosition) {
                 frontLeft.setPower(0);
-            }
-            if (Math.abs(backRight.getCurrentPosition()) > targetPosition) {
-                backRight.setPower(0);
-                //Удалить после починки энкодера
                 backLeft.setPower(0);
             }
+//            if (Math.abs(backRight.getCurrentPosition()) > targetPosition) {
+//                backRight.setPower(0);
+
+//            }
 //            if (Math.abs(backLeft.getCurrentPosition()) > targetPosition) {
 //                backLeft.setPower(0);
 //            }
