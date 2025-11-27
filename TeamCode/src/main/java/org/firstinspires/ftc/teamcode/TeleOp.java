@@ -27,10 +27,9 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("Velosity", ballCannon.velocityMotor());
             // 1. выведи все переменные в консол
             // 2. выведи в консоль управлять
-            telemetry.addData("ballPushingMotorPos", ballCannon.ballPushingMotor.getCurrentPosition());
-            telemetry.addData("ballPushingMotorPos", ballCannon.shootingMotor.getCurrentPosition());
+            telemetry.addData("ballPushingMotorPos", ballCannon.ballPushingServo.getPosition());
+            telemetry.addData("ballShootingMotorPos", ballCannon.shootingMotor.getCurrentPosition());
 
-            telemetry.addData("ballPushingMotorPos", ballCannon.ballPushingMotor.getTargetPosition());
 
 
             telemetry.addLine("a gamepad 2-включение/выключение shootingMotor;" +
@@ -40,7 +39,7 @@ public class TeleOp extends LinearOpMode {
                     "левый джойстик gamepad 1- езда робота по соответствующим направлениям");
             mechTrain.telem();
             telemetry.update();
-            ballCannon.controlBallPushingMotor(gamepad2.x);
+
 
         }
     }
