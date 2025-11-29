@@ -27,7 +27,7 @@ public class BallCannon {
     public static double shootPower = 0.9;
     public static double timerForShoot = 2;
     public static double timeForPush = 2;
-
+    public boolean isMotorOn = false;
     public static int ballPushingPosition = 15;
 
     ElapsedTime timer = new ElapsedTime();
@@ -49,6 +49,12 @@ public class BallCannon {
         ballPushingRotateMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
     }
+    public void shootOn() {
+        shootingMotor.setPower(motorPower);
+        isMotorOn = true;
+    }
+
+    public  void
 
     /**
      * setPower изменяет мощность мотора при изменении положения по оси y правого джостика второго геймпада
@@ -57,14 +63,14 @@ public class BallCannon {
      * @param g2RaghtSticY
      * @return
      */
-    public void setPower(float g2RaghtSticY) {
-        if (g2RaghtSticY > 0 && motorPower <= 1) {
-            motorPower += 0.005;
-        }
-        if (g2RaghtSticY < 0 && motorPower >= 0) {
-            motorPower -= 0.005;
-        }
-    }
+//    public void setPower(float g2RaghtSticY) {
+//        if (g2RaghtSticY > 0 && motorPower <= 1) {
+//            motorPower += 0.005;
+//        }
+//        if (g2RaghtSticY < 0 && motorPower >= 0) {
+//            motorPower -= 0.005;
+//        }
+//    }
 
     /**
      * Метод для вращения мотора пушки по часовой на максимальной мощиности
