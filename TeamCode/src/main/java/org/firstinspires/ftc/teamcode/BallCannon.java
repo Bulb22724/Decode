@@ -54,7 +54,6 @@ public class BallCannon {
         isMotorOn = true;
     }
 
-    public  void
 
     /**
      * setPower изменяет мощность мотора при изменении положения по оси y правого джостика второго геймпада
