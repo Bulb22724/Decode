@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 //
 // build.gradle in TeamCode
 //
@@ -8,18 +10,25 @@
 // please think carefully as to whether such customizations are really necessary
 // before doing so.
 
-
 // Custom definitions may go here
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 
+// включить BuildConfig
+android.buildFeatures.buildConfig true
+
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
     compileSdk 35
     defaultConfig {
         minSdk 24
+        buildConfigField "String", "APP_BUILD_TIME", '"' + (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ROOT).format(new Date())) + '"'
+        // выполнить команду git для инфо о последнем коммите
+        // --dirty добавляет "-dirty" если локальный репозиторий
+        // отличается от удалённого (есть незакоммиченные изменения)
+        buildConfigField "String", "COMMIT_INFO", '"' + ("git describe --all --long --dirty".execute(null, project.rootDir).text.trim()) + '"'
     }
     packagingOptions {
         jniLibs.useLegacyPackaging true
