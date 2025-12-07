@@ -14,7 +14,6 @@ public class BallCannon {
     /* активировать моторы по кнопочке
      */ DcMotorEx shootingMotor;
     Servo ballPushingServo;
-    DcMotorEx ballPushingRotateMotor;
 
     //
     double motorPower = 0;
@@ -24,11 +23,11 @@ public class BallCannon {
     boolean stateButtonA = false;
     public static int nullPosition = 0;
     public static double pushPower = 1;
-    public static double shootPower = 0.9;
-    public static double timerForShoot = 2;
+    public static double shootPower = 1;
+    public static double timerForShoot = 4;
     public static double timeForPush = 2;
     public boolean isMotorOn = false;
-    public static int ballPushingPosition = 15;
+    public static double ballPushingPosition = 0.1;
 
     ElapsedTime timer = new ElapsedTime();
     LinearOpMode opMode;
@@ -45,8 +44,6 @@ public class BallCannon {
         shootingMotor = opMode.hardwareMap.get(DcMotorEx.class, "shootingMotor");
         shootingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ballPushingServo = opMode.hardwareMap.get(Servo.class, "ballPushingServo");
-        ballPushingRotateMotor = opMode.hardwareMap.get(DcMotorEx.class, "ballPushingRotateMotor");
-        ballPushingRotateMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
     }
     public void shootOn() {
@@ -121,13 +118,16 @@ public class BallCannon {
     /**
      * меняет направление вращения мотора для выстрела при нажатии кнопки B
      *
-     * @param g2b кнопка B на втором геймпаде
-     */
-    public void inverseDirection(boolean g2b) {
-        if (stateButtonB && !g2b) {
-            shootPower = -shootPower + 0.5;
-        }
-        stateButtonB = g2b;
+     *      */
+    public void inverseDirection() {
+            shootingMotor.setPower(-shootPower + 0.5);
+            timer.reset();
+            while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive());
+            shootingMotor.setPower(0);
+
+    }
+    public void servoDown() {
+        ballPushingServo.setPosition(nullPosition);
     }
 
     /**
@@ -137,14 +137,12 @@ public class BallCannon {
         timer.reset();
         shootingMotor.setPower(shootPower);
         while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive()) ;
-        ballPushingRotateMotor.setPower(1);
+        ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
         while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
-        ballPushingRotateMotor.setPower(-1);
+        ballPushingServo.setPosition(nullPosition);
         shootingMotor.setPower(0);
-        timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
-        ballPushingRotateMotor.setPower(0);
+
 
 
 

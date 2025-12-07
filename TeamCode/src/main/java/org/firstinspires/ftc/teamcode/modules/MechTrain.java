@@ -75,21 +75,22 @@ public class MechTrain {
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         setPowerOnMecanumBase(motorPowerX, motorPowerY, 0);
         while (((frontLeft.getPower() != 0 || frontRight.getPower() != 0 || backLeft.getPower() != 0 || backRight.getPower() != 0)) && opMode.opModeIsActive()) {
-            if (Math.abs(frontRight.getCurrentPosition()) > targetPosition) {
-                frontRight.setPower(0);
-                backRight.setPower(0);
-            }
-            if (Math.abs(frontLeft.getCurrentPosition()) > targetPosition) {
+//            if (Math.abs(frontRight.getCurrentPosition()) > targetPosition) {
+//                frontRight.setPower(0);
+//
+//            }
+//            if (Math.abs(frontLeft.getCurrentPosition()) > targetPosition) {
+//
+//            }
+            if (Math.abs(backRight.getCurrentPosition()) > targetPosition) {
                 frontLeft.setPower(0);
+                backRight.setPower(0);
+                frontRight.setPower(0);
+
+            }
+            if (Math.abs(backLeft.getCurrentPosition()) > targetPosition) {
                 backLeft.setPower(0);
             }
-//            if (Math.abs(backRight.getCurrentPosition()) > targetPosition) {
-//                backRight.setPower(0);
-
-//            }
-//            if (Math.abs(backLeft.getCurrentPosition()) > targetPosition) {
-//                backLeft.setPower(0);
-//            }
         }
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
