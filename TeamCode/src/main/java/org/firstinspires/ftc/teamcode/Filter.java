@@ -10,8 +10,8 @@ public class Filter {
     Servo valveServo;
     Servo fanServo;
     LinearOpMode opMode;
-    public static double valveOpenPosition;
-    public static double valveClosedPosition;
+    public static double valveOpenPosition = 0;
+    public static double valveClosedPosition = 1;
     boolean isValveOpen = false;
     public static double maxPosition = 1;
     public static double minPosition = 0;
@@ -49,7 +49,7 @@ public class Filter {
         }
     }
 
-    public void vaveOff() {
+    public void valveOff() {
         if (isValveOpen) {
             valveServo.setPosition(valveClosedPosition);
             isValveOpen = false;

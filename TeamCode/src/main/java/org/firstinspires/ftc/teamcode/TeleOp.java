@@ -16,6 +16,7 @@ public class TeleOp extends LinearOpMode {
     BallCannon ballCannon;
 
     boolean stateButtonA = false;
+    boolean stateY = false;
     boolean stateRightBumper = false;
     boolean stateLeftBumper = false;
     @Override
@@ -40,7 +41,15 @@ public class TeleOp extends LinearOpMode {
             if (gamepad2.x) {
                 ballCannon.servoDown();
             }
-
+            if (!gamepad2.y && stateY) {
+                if (filter.isValveOpen) {
+                    filter.valveOff();
+                }
+                else {
+                    filter.valveOn();
+                }
+            }
+            stateY = gamepad2.y;
             if (!gamepad2.left_bumper && stateLeftBumper) {
                 filter.left();
             }
