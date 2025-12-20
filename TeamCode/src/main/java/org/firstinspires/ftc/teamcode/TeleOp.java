@@ -14,7 +14,7 @@ public class TeleOp extends LinearOpMode {
     MechTrain mechTrain;
     Filter filter;
     BallCannon ballCannon;
-
+    Launcher launcher;
     boolean stateButtonA = false;
     boolean stateY = false;
     boolean stateRightBumper = false;
@@ -23,7 +23,7 @@ public class TeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ballCannon = new BallCannon(this);
 //        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
+        launcher = new Launcher(this);
         mechTrain = new MechTrain(this);
         filter = new Filter(this);
         waitForStart();
@@ -74,6 +74,7 @@ public class TeleOp extends LinearOpMode {
                     "левый джойстик gamepad 1- езда робота по соответствующим направлениям");
             mechTrain.telem();
             filter.addData();
+            launcher.addData();
             telemetry.update();
 
 

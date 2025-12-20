@@ -26,11 +26,12 @@ public class Launcher {
     double delay = rotationtime * Math.abs(closePos - pushPos);
     public static double shootTime = 2;
 
-    public void launcher(LinearOpMode opMode) {
+    public Launcher(LinearOpMode opMode) {
+        this.opMode = opMode;
         shootingMotor = opMode.hardwareMap.get(DcMotorEx.class, "shootingMotor");
         shootingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ballPushingServo = opMode.hardwareMap.get(Servo.class, "ballPushingServo");
-        this.opMode = opMode;
+
     }
 
     public void shootOn() {
@@ -70,6 +71,6 @@ public class Launcher {
         telemetry.addData("Время для разгона", shootTime);
         telemetry.addData("Мощность мотора запуска", motorPower);
         telemetry.addData("Время для вращения сервы", "%3.2f %3.2f", rotationtime, delay);
-
+        telemetry.addData("Скорость мотора", shootingMotor.getVelocity());
     }
 }

@@ -25,9 +25,10 @@ public class BallCannon {
     public static double pushPower = 1;
     public static double shootPower = 1;
     public static double timerForShoot = 4;
-    public static double timeForPush = 2;
+    public static double timeForPush = 0.28;
     public boolean isMotorOn = false;
     public static double ballPushingPosition = 0.1;
+    public static double maxVelocity = 1200;
 
     ElapsedTime timer = new ElapsedTime();
     LinearOpMode opMode;
@@ -136,7 +137,7 @@ public class BallCannon {
     public void Shoot() {
         timer.reset();
         shootingMotor.setPower(shootPower);
-        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive()) ;
+        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive() && shootingMotor.getVelocity() <1200) ;
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
         while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());

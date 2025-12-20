@@ -26,7 +26,7 @@ public class AutoShoot extends LinearOpMode {
 
         ballCannon.Shoot();
         timer.reset();
-        //while ((timeA > timer.seconds())) ;
+        while ((timeA > timer.seconds()));
         //mechTrain.moveBackRight(1,Math.sqrt(2)*48);
 //            MechTrain mechTrain = new MechTrain(this);
 //            mechTrain.moveBack(1, 48);
