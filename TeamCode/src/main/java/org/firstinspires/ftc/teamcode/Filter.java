@@ -13,8 +13,8 @@ public class Filter {
     public static double valveOpenPosition;
     public static double valveClosedPosition;
     boolean isValveOpen = false;
-    public static double maxPosition;
-    public static double minPosition;
+    public static double maxPosition = 1;
+    public static double minPosition = 0;
     double step=(maxPosition-minPosition)/6;
     int numberPosition = 0;
     enum Position{B1, T3, B2, T1, B3, T2}
@@ -35,6 +35,12 @@ public class Filter {
     public void setPosition(int numberPosition) {
         fanServo.setPosition(minPosition + (numberPosition) * step);
     }
+    public void setPosition(Position position) {
+        fanServo.setPosition(minPosition + position.ordinal() * step);
+    }
+    public Position getPosition(){
+        return Position.values()[(int) ((fanServo.getPosition() - minPosition)/step)];
+    }
 
     public void valveOn() {
         if (!isValveOpen) {
@@ -50,19 +56,40 @@ public class Filter {
         }
     }
 
-    public void nextPosition() {
-        if (numberPosition < 5) {
-            numberPosition += 1;
-            fanServo.setPosition(minPosition + numberPosition * step);
+    public void right() {
+        if (numberPosition == 4){
+            numberPosition = 0;
+            setPosition(numberPosition);
+        }
+        else if (numberPosition%2!=0) {
+            numberPosition = 0;
+            setPosition(numberPosition);
+        }
+        else {
+            numberPosition += 2;
+            setPosition(numberPosition);
         }
     }
 
-    public void previousPosition() {
-        if (numberPosition > 0) {
-            numberPosition -= 1;
-            fanServo.setPosition(minPosition + numberPosition * step);
+    public void left() {
+        if (numberPosition == 5){
+            numberPosition = 1;
+            setPosition(numberPosition);
         }
+        else if (numberPosition%2==0) {
+            numberPosition = 3;
+            setPosition(numberPosition);
+        }
+        else {
+            numberPosition += 2;
+            setPosition(numberPosition);
+        }
+
     }
+    public void f1(){
+
+    }
+
 
     public void addData() {
         Telemetry telemetry = opMode.telemetry;
@@ -72,23 +99,9 @@ public class Filter {
         telemetry.addData("заслонка открыта", isValveOpen);
 
     }
-//    public void leapNextPosition() {
-//        if(currentPosition == Position.B1){
-//            setPosition(Position.B2.ordinal());
-//        }
-//        else if(currentPosition == Position.B2){
-//            setPosition(Position.B3.ordinal());
-//        }
-//        else if(currentPosition == Position.B3){
-//            setPosition(Position.T1.ordinal());
-//        }
-//        else if(currentPosition == Position.T1){
-//            setPosition(Position.T2.ordinal());
-//        }
-//        else if(currentPosition == Position.T2){
-//            setPosition(Position.T3.ordinal());
-//        }
-//    }
+    public void leapNextPosition() {
+
+    }
 
 
 }

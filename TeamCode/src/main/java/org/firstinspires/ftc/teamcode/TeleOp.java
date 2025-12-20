@@ -12,17 +12,19 @@ import org.firstinspires.ftc.teamcode.modules.MechTrain;
 
 public class TeleOp extends LinearOpMode {
     MechTrain mechTrain;
-
+    Filter filter;
     BallCannon ballCannon;
 
     boolean stateButtonA = false;
+    boolean stateRightBumper = false;
+    boolean stateLeftBumper = false;
     @Override
     public void runOpMode() throws InterruptedException {
         ballCannon = new BallCannon(this);
 //        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         mechTrain = new MechTrain(this);
-
+        filter = new Filter(this);
         waitForStart();
         while (opModeIsActive()) {
            mechTrain.setPowerOnMecanumBase(0.75*gamepad1.left_stick_x, 0.75*gamepad1.left_stick_y, 0.75*(gamepad1.left_trigger - gamepad1.right_trigger));
@@ -38,6 +40,16 @@ public class TeleOp extends LinearOpMode {
             if (gamepad2.x) {
                 ballCannon.servoDown();
             }
+
+            if (!gamepad2.left_bumper && stateLeftBumper) {
+                filter.left();
+            }
+            stateLeftBumper = gamepad2.left_bumper;
+
+            if (!gamepad2.right_bumper && stateRightBumper) {
+                filter.right();
+            }
+            stateRightBumper = gamepad2.right_bumper;
             telemetry.addData("Velosity", ballCannon.velocityMotor());
             // 1. выведи все переменные в консол
             // 2. выведи в консоль управлять
@@ -52,6 +64,7 @@ public class TeleOp extends LinearOpMode {
                     "правый джойстик gamepad 2- вверх/вниз управление мощностью мотора срельбы "+
                     "левый джойстик gamepad 1- езда робота по соответствующим направлениям");
             mechTrain.telem();
+            filter.addData();
             telemetry.update();
 
 
