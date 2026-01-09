@@ -19,6 +19,7 @@ public class TeleOp extends LinearOpMode {
     boolean stateY = false;
     boolean stateRightBumper = false;
     boolean stateLeftBumper = false;
+    boolean yState = false;
     @Override
     public void runOpMode() throws InterruptedException {
         ballCannon = new BallCannon(this);
@@ -58,6 +59,10 @@ public class TeleOp extends LinearOpMode {
             if (!gamepad2.right_bumper && stateRightBumper) {
                 //filter.right();
             }
+            if (gamepad1.y && !yState){
+                filter.fun();
+            }
+            yState = gamepad1.y;
             stateRightBumper = gamepad2.right_bumper;
             telemetry.addData("Velosity", ballCannon.velocityMotor());
             // 1. выведи все переменные в консол

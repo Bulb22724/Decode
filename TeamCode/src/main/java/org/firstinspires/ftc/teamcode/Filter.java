@@ -17,6 +17,7 @@ public class Filter {
     public static double maxPosition = 1;
     public static double minPosition = 0;
     double step = 0.0462962962962963; //step=(maxPosition-minPosition)/6;
+    public static double funPosition = 0;
     int numberPosition = 0;
 
     enum Position {B1, T3, B2, T1, B3, T2}
@@ -74,8 +75,8 @@ public class Filter {
         }
     }
 
-    public void f1() {
-
+    public void fun() {
+        fanServo.setPosition(funPosition);
     }
 
 
