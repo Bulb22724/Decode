@@ -12,20 +12,24 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class BallCannon {
     /* активировать моторы по кнопочке
-     */ DcMotorEx shootingMotor;
+     */
+    DcMotorEx shootingMotor;
+     DcMotorEx ballPushingMotor;
     Servo ballPushingServo;
 
     //
+    int ticks = 288;
+    public static int phase = 0;
     double motorPower = 0;
     double radius = 0.082;
     boolean modeShootingMotor = false;
     boolean stateButtonB = false;
     boolean stateButtonA = false;
-    public static int nullPosition = 0;
+    public static double nullPosition = 0.5;
     public static double pushPower = 1;
     public static double shootPower = 1;
     public static double timerForShoot = 4;
-    public static double timeForPush = 0.28;
+    public static double timeForPush = 2;
     public boolean isMotorOn = false;
     public static double ballPushingPosition = 0.1;
     public static double maxVelocity = 1200;
@@ -45,7 +49,7 @@ public class BallCannon {
         shootingMotor = opMode.hardwareMap.get(DcMotorEx.class, "shootingMotor");
         shootingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ballPushingServo = opMode.hardwareMap.get(Servo.class, "ballPushingServo");
-
+        ballPushingMotor = opMode.hardwareMap.get(DcMotorEx.class, "ballPushingMotor");
     }
     public void shootOn() {
         shootingMotor.setPower(motorPower);
@@ -135,14 +139,22 @@ public class BallCannon {
      * Метод для подталкивания мяча и выстреле при вызове
      */
     public void Shoot() {
+        ballPushingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ballPushingMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         timer.reset();
         shootingMotor.setPower(shootPower);
         while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive() && shootingMotor.getVelocity() <1200) ;
+        ballPushingMotor.setPower(pushPower);
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
         while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
+        ballPushingMotor.setTargetPosition(ballPushingMotor.getCurrentPosition() - ballPushingMotor.getCurrentPosition()%ticks+phase);
+        ballPushingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         ballPushingServo.setPosition(nullPosition);
         shootingMotor.setPower(0);
+
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
+        ballPushingMotor.setPower(0);
 
 
 

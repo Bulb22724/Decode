@@ -56,7 +56,7 @@ public class TeleOp extends LinearOpMode {
             stateLeftBumper = gamepad2.left_bumper;
 
             if (!gamepad2.right_bumper && stateRightBumper) {
-                filter.right();
+                //filter.right();
             }
             stateRightBumper = gamepad2.right_bumper;
             telemetry.addData("Velosity", ballCannon.velocityMotor());

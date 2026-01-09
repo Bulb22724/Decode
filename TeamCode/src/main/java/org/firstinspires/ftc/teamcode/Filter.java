@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 @Config
 public class Filter {
     Servo valveServo;
@@ -15,9 +16,11 @@ public class Filter {
     boolean isValveOpen = false;
     public static double maxPosition = 1;
     public static double minPosition = 0;
-    double step=(maxPosition-minPosition)/6;
+    double step = 0.0462962962962963; //step=(maxPosition-minPosition)/6;
     int numberPosition = 0;
-    enum Position{B1, T3, B2, T1, B3, T2}
+
+    enum Position {B1, T3, B2, T1, B3, T2}
+
     Position currentPosition = Position.T3;
 
 
@@ -35,11 +38,13 @@ public class Filter {
     public void setPosition(int numberPosition) {
         fanServo.setPosition(minPosition + (numberPosition) * step);
     }
+
     public void setPosition(Position position) {
         fanServo.setPosition(minPosition + position.ordinal() * step);
     }
-    public Position getPosition(){
-        return Position.values()[(int) ((fanServo.getPosition() - minPosition)/step)];
+
+    public Position getPosition() {
+        return Position.values()[(int) ((fanServo.getPosition() - minPosition) / step)];
     }
 
     public void valveOn() {
@@ -56,37 +61,20 @@ public class Filter {
         }
     }
 
-    public void right() {
-        if (numberPosition == 4){
-            numberPosition = 0;
-            setPosition(numberPosition);
-        }
-        else if (numberPosition%2!=0) {
-            numberPosition = 0;
-            setPosition(numberPosition);
-        }
-        else {
-            numberPosition += 2;
-            setPosition(numberPosition);
-        }
-    }
 
     public void left() {
-        if (numberPosition == 5){
-            numberPosition = 1;
-            setPosition(numberPosition);
+        if (fanServo.getPosition() < 0.2777777777777778) {
+            fanServo.setPosition(fanServo.getPosition() + step * 2);
+        } else if (fanServo.getPosition() == 0.2777777777777778) {
+            fanServo.setPosition(fanServo.getPosition() + step);
+        } else if (fanServo.getPosition() <= 0.5555555555555556) {
+            fanServo.setPosition(fanServo.getPosition() + step * 2);
+        } else {
+            fanServo.setPosition(0);
         }
-        else if (numberPosition%2==0) {
-            numberPosition = 3;
-            setPosition(numberPosition);
-        }
-        else {
-            numberPosition += 2;
-            setPosition(numberPosition);
-        }
-
     }
-    public void f1(){
+
+    public void f1() {
 
     }
 
@@ -99,6 +87,7 @@ public class Filter {
         telemetry.addData("заслонка открыта", isValveOpen);
 
     }
+
     public void leapNextPosition() {
 
     }
