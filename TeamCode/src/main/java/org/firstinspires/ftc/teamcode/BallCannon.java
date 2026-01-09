@@ -27,7 +27,7 @@ public class BallCannon {
     boolean stateButtonA = false;
     public static double nullPosition = 0.5;
     public static double pushPower = 1;
-    public static double shootPower = 1;
+    public static double shootPower = -1;
     public static double timerForShoot = 4;
     public static double timeForPush = 2;
     public boolean isMotorOn = false;

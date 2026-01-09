@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class Filter {
     Servo valveServo;
-    Servo fanServo;
+    CRServo fanServo;
     LinearOpMode opMode;
     public static double valveOpenPosition = 0;
     public static double valveClosedPosition = 1;
@@ -27,26 +28,26 @@ public class Filter {
 
     public Filter(LinearOpMode opMode) {
         valveServo = opMode.hardwareMap.get(Servo.class, "valveServo");
-        fanServo = opMode.hardwareMap.get(Servo.class, "fanServo");
+        fanServo = opMode.hardwareMap.get(CRServo.class, "fanServo");
         this.opMode = opMode;
-        fanServo.setPosition(minPosition);
+//        fanServo.setPosition(minPosition);
         valveServo.setPosition(valveClosedPosition);
     }
 
     /**
      * @param numberPosition принимает номер позиции от 0 до 5
      */
-    public void setPosition(int numberPosition) {
-        fanServo.setPosition(minPosition + (numberPosition) * step);
-    }
-
-    public void setPosition(Position position) {
-        fanServo.setPosition(minPosition + position.ordinal() * step);
-    }
-
-    public Position getPosition() {
-        return Position.values()[(int) ((fanServo.getPosition() - minPosition) / step)];
-    }
+//    public void setPosition(int numberPosition) {
+//        fanServo.setPosition(minPosition + (numberPosition) * step);
+//    }
+//
+//    public void setPosition(Position position) {
+//        fanServo.setPosition(minPosition + position.ordinal() * step);
+//    }
+//
+//    public Position getPosition() {
+//        return Position.values()[(int) ((fanServo.getPosition() - minPosition) / step)];
+//    }
 
     public void valveOn() {
         if (!isValveOpen) {
@@ -63,27 +64,36 @@ public class Filter {
     }
 
 
-    public void left() {
-        if (fanServo.getPosition() < 0.2777777777777778) {
-            fanServo.setPosition(fanServo.getPosition() + step * 2);
-        } else if (fanServo.getPosition() == 0.2777777777777778) {
-            fanServo.setPosition(fanServo.getPosition() + step);
-        } else if (fanServo.getPosition() <= 0.5555555555555556) {
-            fanServo.setPosition(fanServo.getPosition() + step * 2);
-        } else {
-            fanServo.setPosition(0);
-        }
+//    public void left() {
+////        if (fanServo.getPosition() < 0.2777777777777778) {
+////            fanServo.setPosition(fanServo.getPosition() + step * 2);
+////        } else if (fanServo.getPosition() == 0.2777777777777778) {
+////            fanServo.setPosition(fanServo.getPosition() + step);
+////        } else if (fanServo.getPosition() <= 0.5555555555555556) {
+////            fanServo.setPosition(fanServo.getPosition() + step * 2);
+////        } else {
+////            fanServo.setPosition(0);
+////        }
+//    }
+    public void right(){
+        fanServo.setPower(funPosition);
+    }
+    public void left(){
+        fanServo.setPower(-funPosition);
+    }
+    public void stop(){
+        fanServo.setPower(0);
     }
 
     public void fun() {
-        fanServo.setPosition(funPosition);
+//        fanServo.setPosition(funPosition);
     }
 
 
     public void addData() {
         Telemetry telemetry = opMode.telemetry;
         telemetry.addData("номер позиции барабана", numberPosition + 1);
-        telemetry.addData("", "Позиция барабана:макс %.2f мин %.2f текущая %.2f", maxPosition, minPosition, fanServo.getPosition());
+//        telemetry.addData("", "Позиция барабана:макс %.2f мин %.2f текущая %.2f", maxPosition, minPosition, fanServo.getPosition());
         telemetry.addData("", "Позиция заслонки:открыто %.2f закрыто %.2f текущая %.2f", valveOpenPosition, valveClosedPosition, valveServo.getPosition());
         telemetry.addData("заслонка открыта", isValveOpen);
 
