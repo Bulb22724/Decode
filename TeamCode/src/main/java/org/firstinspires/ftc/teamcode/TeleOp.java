@@ -38,13 +38,10 @@ public class TeleOp extends LinearOpMode {
                 ballCannon.Shoot();
             }
             stateButtonA = gamepad2.a;
-            if (gamepad2.left_bumper) {
-                filter.left();
-            } else if (gamepad2.right_bumper) {
-                filter.right();
-            } else {
-                filter.stop();
-            }
+            filter.easyFilter(gamepad2.left_trigger, gamepad2.right_trigger);
+            filter.difficultFilter(gamepad2.left_bumper, gamepad2.right_bumper);
+            ballCannon.pushMotor(gamepad2.right_stick_y);
+            ballCannon.servoUD(gamepad2.x);
             if (!gamepad2.y && stateY) {
                 if (filter.isValveOpen) {
                     filter.valveOff();
@@ -64,6 +61,7 @@ public class TeleOp extends LinearOpMode {
             if (gamepad1.y && !yState) {
                 filter.fun();
             }
+
             yState = gamepad1.y;
             stateRightBumper = gamepad2.right_bumper;
             telemetry.addData("Velosity", ballCannon.velocityMotor());

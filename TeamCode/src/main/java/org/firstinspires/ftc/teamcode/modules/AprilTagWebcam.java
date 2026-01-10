@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Autonomous
+//@Autonomous
 public class AprilTagWebcam {
 
     private AprilTagProcessor apriltagProcessor;
@@ -58,7 +58,7 @@ public class AprilTagWebcam {
         }
     }
 
-    enum ColorSequense {GPP, PGP, PPG, NOTFOUND}
+    public enum ColorSequense {GPP, PGP, PPG, NOTFOUND}
 
     public ColorSequense getColorSequense() {
         List<AprilTagDetection> detectedTags = apriltagProcessor.getDetections();

@@ -79,11 +79,10 @@ public class MechTrain {
 //                frontRight.setPower(0);
 //
 //            }
-//            if (Math.abs(frontLeft.getCurrentPosition()) > targetPosition) {
-//
-//            }
-            if (Math.abs(backRight.getCurrentPosition()) > targetPosition) {
+            if (Math.abs(frontLeft.getCurrentPosition()) > targetPosition) {
                 frontLeft.setPower(0);
+            }
+            if (Math.abs(backRight.getCurrentPosition()) > targetPosition) {
                 backRight.setPower(0);
                 frontRight.setPower(0);
 

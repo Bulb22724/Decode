@@ -14,7 +14,7 @@ public class BallCannon {
     /* активировать моторы по кнопочке
      */
     DcMotorEx shootingMotor;
-     DcMotorEx ballPushingMotor;
+    DcMotorEx ballPushingMotor;
     Servo ballPushingServo;
 
     //
@@ -25,18 +25,19 @@ public class BallCannon {
     boolean modeShootingMotor = false;
     boolean stateButtonB = false;
     boolean stateButtonA = false;
-    public static double nullPosition = 0.5;
+    public static double nullPosition = 0.6;
     public static double pushPower = 1;
     public static double shootPower = -1;
     public static double timerForShoot = 4;
-    public static double timeForPush = 2;
+    public static double timeForPush = 1;
+    public static double timeForServo = 0.4;
     public boolean isMotorOn = false;
-    public static double ballPushingPosition = 0.1;
+    public static double ballPushingPosition = 0;
     public static double maxVelocity = 1200;
-
+    boolean xState = false;
     ElapsedTime timer = new ElapsedTime();
     LinearOpMode opMode;
-
+    Filter filter;
     /**
      * HardwareMap это карта устройств
      * <p>
@@ -50,7 +51,9 @@ public class BallCannon {
         shootingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ballPushingServo = opMode.hardwareMap.get(Servo.class, "ballPushingServo");
         ballPushingMotor = opMode.hardwareMap.get(DcMotorEx.class, "ballPushingMotor");
+        filter = new Filter(opMode);
     }
+
     public void shootOn() {
         shootingMotor.setPower(motorPower);
         isMotorOn = true;
@@ -122,40 +125,57 @@ public class BallCannon {
 
     /**
      * меняет направление вращения мотора для выстрела при нажатии кнопки B
-     *
-     *      */
+     */
     public void inverseDirection() {
-            shootingMotor.setPower(-shootPower + 0.5);
-            timer.reset();
-            while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive());
-            shootingMotor.setPower(0);
+        shootingMotor.setPower(-shootPower + 0.5);
+        timer.reset();
+        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive()) ;
+        shootingMotor.setPower(0);
 
     }
-    public void servoDown() {
-        ballPushingServo.setPosition(nullPosition);
+    public void servoUD (boolean g2x) {
+        if (g2x) {
+            ballPushingServo.setPosition(ballPushingPosition);;
+        }
+        else {
+            ballPushingServo.setPosition(nullPosition);}
     }
-
+    public void pushMotor (double power) {
+        ballPushingMotor.setPower(power);
+    }
     /**
      * Метод для подталкивания мяча и выстреле при вызове
      */
     public void Shoot() {
-        ballPushingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ballPushingMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         timer.reset();
         shootingMotor.setPower(shootPower);
-        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive() && shootingMotor.getVelocity() <1200) ;
-        ballPushingMotor.setPower(pushPower);
+        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive());
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
         while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
-        ballPushingMotor.setTargetPosition(ballPushingMotor.getCurrentPosition() - ballPushingMotor.getCurrentPosition()%ticks+phase);
-        ballPushingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         ballPushingServo.setPosition(nullPosition);
-        shootingMotor.setPower(0);
-
+        timer.reset();
         while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
-        ballPushingMotor.setPower(0);
 
+        filter.autoFilter(0.4, 0, 0.43);
+
+        ballPushingServo.setPosition(ballPushingPosition);
+        timer.reset();
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
+        ballPushingServo.setPosition(nullPosition);
+        timer.reset();
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
+
+        filter.autoFilter(0.4, 0, 0.43);
+
+        ballPushingServo.setPosition(ballPushingPosition);
+        timer.reset();
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
+        ballPushingServo.setPosition(nullPosition);
+        timer.reset();
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
+
+        shootingMotor.setPower(0);
 
 
 
