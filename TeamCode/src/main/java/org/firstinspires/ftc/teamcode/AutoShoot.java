@@ -12,9 +12,9 @@ import org.firstinspires.ftc.teamcode.modules.MechTrain;
 @Config
 public class AutoShoot extends LinearOpMode {
     double timeA = 1;
-    public static double k = 1.7;
-    public static double k2 = 0.8;
-    public static double timeB = 0.41;
+    public static double k = 1.5;
+    public static double k2 = 0.5;
+
     private ElapsedTime timer = new ElapsedTime();
 
     public void runOpMode() throws InterruptedException {
@@ -24,26 +24,16 @@ public class AutoShoot extends LinearOpMode {
         Filter filter = new Filter(this);
         AprilTagWebcam camera = new AprilTagWebcam((this));
         // стреляем
-
+        double timeB = ballCannon.timeB;
 
         double shootingTime = 3;
         double pushingTime = 1;
         mechTrain.moveBack(0.45, 7); //0.5
 
         ballCannon.Shoot();
-        timer.reset();
-        while (timeA > timer.seconds() && opModeIsActive());
-        filter.autoFilter(-0.4, 0, timeB);
-        ballCannon.Shoot();
-        timer.reset();
-        while (timeA > timer.seconds() && opModeIsActive());
-        filter.autoFilter(-0.4, 0, timeB);
+        mechTrain.moveLeft(0.45, 16);
 
-        ballCannon.Shoot();
-        timer.reset();
-        while (timeA > timer.seconds() && opModeIsActive());
-
-        //mechTrain.moveBack(0.45, 7); //0.5
+//        mechTrain.moveBack(0.45, 7); //0.45
 //        timer.reset();
 //        while (timeA > timer.seconds());
 //        AprilTagWebcam.ColorSequense colors = camera.getColorSequense();
@@ -51,59 +41,20 @@ public class AutoShoot extends LinearOpMode {
 //            case GPP:
 //                filter.autoFilter(-0.4, 0, timeB * k);
 //                ballCannon.Shoot();
-//                timer.reset();
-//                while (timeA > timer.seconds() && opModeIsActive()) ;
-//                filter.autoFilter(-0.4, 0, timeB);
-//                ballCannon.Shoot();
-//                timer.reset();
-//                while (timeA > timer.seconds() && opModeIsActive()) ;
-//                filter.autoFilter(-0.4, 0, timeB);
-//                ballCannon.Shoot();
-//                timer.reset();
-//                while (timeA > timer.seconds() && opModeIsActive()) ;
 //                break;
-//
 //            case PGP:
-//                filter.autoFilter(-0.4, 0, timeB * 0.77);
-//                ballCannon.Shoot();
-//                timer.reset();
-//                while (timeA > timer.seconds() && opModeIsActive()) ;
-//                filter.autoFilter(-0.4, 0, timeB);
-//                ballCannon.Shoot();
-//                timer.reset();
-//                while (timeA > timer.seconds() && opModeIsActive()) ;
-//                filter.autoFilter(-0.4, 0, timeB);
-//                ballCannon.Shoot();
-//                timer.reset();
-//                while (timeA > timer.seconds() && opModeIsActive()) ;
-//                break;
-//            case PPG:
 //                filter.autoFilter(-0.4, 0, timeB * k2);
+//                ballCannon.Shoot();                break;
+//            case PPG:
+//                filter.autoFilter(0.4, 0, timeB * k2);
 //                ballCannon.Shoot();
-//                timer.reset();
-//                while (timeA > timer.seconds() && opModeIsActive()) ;
-//                filter.autoFilter(+0.4, 0, timeB);
-//                ballCannon.Shoot();
-//                timer.reset();
-//                while (timeA > timer.seconds() && opModeIsActive()) ;
-//                filter.autoFilter(+0.4, 0, timeB);
-//                ballCannon.Shoot();
-//                timer.reset();
-//                while (timeA > timer.seconds() && opModeIsActive());
 //                break;
 //            case NOTFOUND:
 //                filter.autoFilter(-0.4, 0, timeB * k2);
 //                ballCannon.Shoot();
-//                timer.reset();
-//                while (timeA > timer.seconds() && opModeIsActive()) ;
-//                filter.autoFilter(+0.4, 0, timeB);
-//                ballCannon.Shoot();
-//                timer.reset();
-//                while (timeA > timer.seconds() && opModeIsActive()) ;
-//                filter.autoFilter(+0.4, 0, timeB);
-//                ballCannon.Shoot();
-//                timer.reset();
 //        }
+//        mechTrain.moveRight(0.45, 16);
+
 //        ballCannon.Shoot();
 //        timer.reset();
 //        while (timeA > timer.seconds() && opModeIsActive()) ;

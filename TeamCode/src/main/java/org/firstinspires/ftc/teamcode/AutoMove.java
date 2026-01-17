@@ -15,7 +15,7 @@ public class AutoMove extends LinearOpMode {
     public void runOpMode() {
         MechTrain mechTrain = new MechTrain(this);
         waitForStart();
-        sleep(26000);
+        sleep(20000);
         mechTrain.moveBack(0.5,tP);
         }
 

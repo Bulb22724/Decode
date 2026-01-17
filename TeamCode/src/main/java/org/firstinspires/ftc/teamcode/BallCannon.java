@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.modules.AprilTagWebcam;
 
 @Config
 public class BallCannon {
@@ -21,7 +23,7 @@ public class BallCannon {
     int ticks = 288;
     public static int phase = 0;
     double motorPower = 0;
-    double radius = 0.082;
+    double radius = 0.019;
     boolean modeShootingMotor = false;
     boolean stateButtonB = false;
     boolean stateButtonA = false;
@@ -30,7 +32,7 @@ public class BallCannon {
     public static double shootPower = -1;
     public static double timerForShoot = 4;
     public static double timeForPush = 1;
-    public static double timeForServo = 0.4;
+    public static double timeB = 0.37;
     public boolean isMotorOn = false;
     public static double ballPushingPosition = 0;
     public static double maxVelocity = 1200;
@@ -38,6 +40,8 @@ public class BallCannon {
     ElapsedTime timer = new ElapsedTime();
     LinearOpMode opMode;
     Filter filter;
+    AprilTagWebcam camera;
+
     /**
      * HardwareMap это карта устройств
      * <p>
@@ -97,13 +101,13 @@ public class BallCannon {
 //        shootingMotor.setPower(-motorPower);
 //    }
     public double velocityMotor() {
-        return radius * 3.14 * 2 * (shootingMotor.getVelocity() / 384.5);
+        return radius * (shootingMotor.getVelocity(AngleUnit.RADIANS));
 
     }
 
-    public void telem() {
+    public void addData() {
         Telemetry telemetry = opMode.telemetry;
-        telemetry.addData("скорость колеса пушки", velocityMotor());
+        telemetry.addData("скорость колеса пушки", shootingMotor.getVelocity(AngleUnit.RADIANS)*3.14);
     }
 
     /**
@@ -111,72 +115,70 @@ public class BallCannon {
      *
      * @param g2a кнопка A на втором геймпаде
      */
-    public void Shoot(boolean g2a) {
-        if (stateButtonA && !g2a) {
-            modeShootingMotor = !modeShootingMotor;
-        }
-        if (modeShootingMotor) {
-            shootingMotor.setPower(motorPower);
-        } else {
-            shootingMotor.setPower(0);
-        }
-        stateButtonA = g2a;
+    public void Shoot1() {
+        timer.reset();
+        shootingMotor.setPower(shootPower);
+        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive()) ;
+        ballPushingServo.setPosition(ballPushingPosition);
+        timer.reset();
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
+        ballPushingServo.setPosition(nullPosition);
+        shootingMotor.setPower(0);
+        timer.reset();
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
+
+
     }
 
     /**
      * меняет направление вращения мотора для выстрела при нажатии кнопки B
      */
-    public void inverseDirection() {
-        shootingMotor.setPower(-shootPower + 0.5);
-        timer.reset();
-        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive()) ;
-        shootingMotor.setPower(0);
-
-    }
-    public void servoUD (boolean g2x) {
+    public void servoUD(boolean g2x) {
         if (g2x) {
-            ballPushingServo.setPosition(ballPushingPosition);;
+            ballPushingServo.setPosition(ballPushingPosition);
+            ;
+        } else {
+            ballPushingServo.setPosition(nullPosition);
         }
-        else {
-            ballPushingServo.setPosition(nullPosition);}
     }
-    public void pushMotor (double power) {
+
+    public void pushMotor(double power) {
         ballPushingMotor.setPower(power);
     }
+
     /**
      * Метод для подталкивания мяча и выстреле при вызове
      */
     public void Shoot() {
         timer.reset();
         shootingMotor.setPower(shootPower);
-        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive());
+        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive()) ;
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
         ballPushingServo.setPosition(nullPosition);
         timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
 
-        filter.autoFilter(0.4, 0, 0.43);
-
-        ballPushingServo.setPosition(ballPushingPosition);
-        timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
-        ballPushingServo.setPosition(nullPosition);
-        timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
-
-        filter.autoFilter(0.4, 0, 0.43);
+        filter.autoFilter(-0.4, 0, timeB);
 
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
         ballPushingServo.setPosition(nullPosition);
         timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
+
+        filter.autoFilter(-0.4, 0, timeB);
+
+        ballPushingServo.setPosition(ballPushingPosition);
+        timer.reset();
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
+        ballPushingServo.setPosition(nullPosition);
+        timer.reset();
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
 
         shootingMotor.setPower(0);
-
 
 
     }

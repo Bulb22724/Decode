@@ -116,11 +116,11 @@ public class MechTrain {
     }
 
     public void moveRight(double motorPower, double targetPosition) {
-        rideTic(0, motorPower, targetPosition);
+        rideTic(-motorPower, 0, targetPosition);
     }
 
     public void moveLeft(double motorPower, double targetPosition) {
-        rideTic(0, -motorPower, targetPosition);
+        rideTic(motorPower, 0, targetPosition);
     }
 
     public void moveForwardRight(double motorPower, double targetPosition) {
