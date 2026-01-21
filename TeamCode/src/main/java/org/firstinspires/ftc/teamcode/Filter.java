@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,10 +29,15 @@ public class Filter {
     public static double minPosition = 0;
     public static int step = 96; //step=(maxPosition-minPosition)/6;
     public static double funPosition = 0.4;
+    public static double k = 5;
     int numberPosition = 0;
     double t = 0;
+    /*
+    timeRecycling сколько времени после достижения цели будет работать мотор
+     */
+    public static double timeRecycling = 0.4;
     public static int target;
-    public static int koef = 10;
+    public static int koef = 1;
     double tp = 1488;
 
     enum Position {B1, T3, B2, T1, B3, T2}
@@ -44,12 +51,8 @@ public class Filter {
         this.opMode = opMode;
 //        fanServo.setPosition(minPosition);
         valveServo.setPosition(valveClosedPosition);
-        telemetry = opMode.telemetry;
+        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), opMode.telemetry);
     }
-
-    /**
-     * @param numberPosition принимает номер позиции от 0 до 5
-     */
 //    public void setPosition(int numberPosition) {
 //        fanServo.setPosition(minPosition + (numberPosition) * step);
 //    }
@@ -75,6 +78,7 @@ public class Filter {
             isValveOpen = false;
         }
     }
+
     public void autoFilter(double powerL, double powerR, double time) {
         godlyMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         timer.reset();
@@ -83,7 +87,8 @@ public class Filter {
         }
         godlyMotor.setPower(0);
     }
-    public void easyFilter(double powerL, double powerR){
+
+    public void easyFilter(double powerL, double powerR) {
         godlyMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         godlyMotor.setPower(powerL - powerR);
     }
@@ -92,27 +97,32 @@ public class Filter {
         godlyMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tp = godlyMotor.getCurrentPosition() - step;
         timer.reset();
-        while ((godlyMotor.getCurrentPosition() < tp + koef || godlyMotor.getCurrentPosition() > tp - koef) && opMode.opModeIsActive() && timer.seconds() < timeA) {
-            godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / 10);
-            telemetry.addData("мощность на фильтр", godlyMotor.getPower() / 10);
+        while ((godlyMotor.getCurrentPosition() > tp + koef || godlyMotor.getCurrentPosition() < tp - koef) && opMode.opModeIsActive() && timeA > timer.seconds()) {
+            godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
+            telemetry.addData("мощность на фильтр", godlyMotor.getPower());
             telemetry.update();
         }
         t = timer.seconds();
+        while (opMode.opModeIsActive() && timeRecycling + t > timer.seconds()) {
+            godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
+        }
+        t = timer.seconds();
         godlyMotor.setPower(0);
+
     }
+
 //    public void left() {
-////        if (fanServo.getPosition() < 0.2777777777777778) {
-////            fanServo.setPosition(fanServo.getPosition() + step * 2);
-////        } else if (fanServo.getPosition() == 0.2777777777777778) {
-////            fanServo.setPosition(fanServo.getPosition() + step);
-////        } else if (fanServo.getPosition() <= 0.5555555555555556) {
-////            fanServo.setPosition(fanServo.getPosition() + step * 2);
-////        } else {
-////            fanServo.setPosition(0);
-////        }
+
+    /// /        if (fanServo.getPosition() < 0.2777777777777778) {
+    /// /            fanServo.setPosition(fanServo.getPosition() + step * 2);
+    /// /        } else if (fanServo.getPosition() == 0.2777777777777778) {
+    /// /            fanServo.setPosition(fanServo.getPosition() + step);
+    /// /        } else if (fanServo.getPosition() <= 0.5555555555555556) {
+    /// /            fanServo.setPosition(fanServo.getPosition() + step * 2);
+    /// /        } else {
+    /// /            fanServo.setPosition(0);
+    /// /        }
 //    }
-
-
     public void fun() {
 //        fanServo.setPosition(funPosition);
     }
@@ -126,7 +136,7 @@ public class Filter {
         telemetry.addData("Позиция сервы фильтра", godlyMotor.getCurrentPosition());
         telemetry.addData("нужная позиция сервы", tp);
         telemetry.addData("Время поворота", t);
-}
+    }
 
     public void leapNextPosition() {
 
