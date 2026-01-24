@@ -35,7 +35,7 @@ public class Filter {
     /*
     timeRecycling сколько времени после достижения цели будет работать мотор
      */
-    public static double timeRecycling = 0.4;
+    public static double timeRecycling = 0.2;
     public static int target;
     public static int koef = 1;
     double tp = 1488;
@@ -93,14 +93,21 @@ public class Filter {
         godlyMotor.setPower(powerL - powerR);
     }
 
-    public void difficultFilter() {
+    public void difficultFilter(double pecentageTurnLenght) {
         godlyMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        tp = godlyMotor.getCurrentPosition() - step;
+        tp = godlyMotor.getCurrentPosition() - step*pecentageTurnLenght;
         timer.reset();
         while ((godlyMotor.getCurrentPosition() > tp + koef || godlyMotor.getCurrentPosition() < tp - koef) && opMode.opModeIsActive() && timeA > timer.seconds()) {
             godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
             telemetry.addData("мощность на фильтр", godlyMotor.getPower());
             telemetry.update();
+        }
+       t = timer.seconds();
+        while (opMode.opModeIsActive() && timeRecycling + t > timer.seconds()) {
+            godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
+        }
+        while (((tp >  godlyMotor.getCurrentPosition())||tp < godlyMotor.getCurrentPosition())&&opMode.opModeIsActive()){
+            godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
         }
         t = timer.seconds();
         while (opMode.opModeIsActive() && timeRecycling + t > timer.seconds()) {

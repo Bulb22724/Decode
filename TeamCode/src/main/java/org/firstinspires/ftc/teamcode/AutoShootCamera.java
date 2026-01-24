@@ -29,27 +29,27 @@ public class AutoShootCamera extends LinearOpMode {
         double shootingTime = 3;
         double pushingTime = 1;
 
-        mechTrain.moveBack(0.45, 7); //0.45
+        //mechTrain.moveBack(0.45, 7); //0.45
         timer.reset();
         while (timeA > timer.seconds());
         AprilTagWebcam.ColorSequense colors = camera.getColorSequense();
         switch (camera.getColorSequense()) {
             case GPP:
-                filter.autoFilter(-0.4, 0, timeB * k);
+                filter.difficultFilter(1.5);
                 ballCannon.Shoot();
                 break;
             case PGP:
-                filter.autoFilter(-0.4, 0, timeB * k2);
+                filter.difficultFilter(0.5);
                 ballCannon.Shoot();
                 break;
             case PPG:
-                filter.autoFilter(0.4, 0, timeB * k2);
+                filter.difficultFilter(-0.5);
                 ballCannon.Shoot();
                 break;
             case NOTFOUND:
-                filter.autoFilter(-0.4, 0, timeB * k2);
+                filter.difficultFilter(0.5);
                 ballCannon.Shoot();
         }
-        mechTrain.moveLeft(0.45, 16);
+        //mechTrain.moveLeft(0.45, 16);
     }
 }

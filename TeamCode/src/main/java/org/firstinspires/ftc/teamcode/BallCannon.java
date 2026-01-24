@@ -160,7 +160,7 @@ public class BallCannon {
         timer.reset();
         while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
 
-        filter.autoFilter(-0.4, 0, timeB);
+        filter.difficultFilter(1);
 
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
@@ -169,7 +169,7 @@ public class BallCannon {
         timer.reset();
         while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
 
-        filter.autoFilter(-0.4, 0, timeB);
+        filter.difficultFilter(1);
 
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();

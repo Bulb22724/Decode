@@ -40,12 +40,12 @@ public class TeleOp extends LinearOpMode {
             stateButtonA = gamepad2.a;
             filter.easyFilter(gamepad2.left_trigger, gamepad2.right_trigger);
             if (gamepad1.x) {
-                filter.difficultFilter();
+                filter.difficultFilter(1);
             }
             ballCannon.pushMotor(gamepad2.right_stick_y);
-            ballCannon.servoUD(gamepad2.x);
+
             if (gamepad2.b) {
-                ballCannon.Shoot1();
+                filter.difficultFilter(0.5);
             }
             if (!gamepad2.y && stateY) {
                 if (filter.isValveOpen) {
