@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -11,11 +12,15 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.modules.MechTrain;
+
 @Config
 public class Filter {
     Servo valveServo;
     DcMotorEx godlyMotor;
     Servo rotateServo;
+    MechTrain mechTrain;
+    BallCannon ballCannon;
     LinearOpMode opMode;
     private ElapsedTime timer = new ElapsedTime();
     public static double valveOpenPosition = 0;
@@ -53,6 +58,7 @@ public class Filter {
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), opMode.telemetry);
         double angle = rotateServo.getPosition();
         rotateServo.setPosition(angle);
+        mechTrain = new MechTrain(opMode);
     }
 //    public void setPosition(int numberPosition) {
 //        fanServo.setPosition(minPosition + (numberPosition) * step);
@@ -84,6 +90,7 @@ public class Filter {
         godlyMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         timer.reset();
         while (time > timer.seconds() && opMode.opModeIsActive()) {
+            mechTrain.setPowerOnMecanumBase(ballCannon.constantMechTrain * gamepad1.left_stick_x, ballCannon.constantMechTrain * gamepad1.left_stick_y, ballCannon.constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
             godlyMotor.setPower(powerL - powerR);
         }
         godlyMotor.setPower(0);
@@ -96,22 +103,26 @@ public class Filter {
 
     public void nextPosition(double pecentageTurnLenght) {
         godlyMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        tp = godlyMotor.getCurrentPosition() - step*pecentageTurnLenght;
+        tp = godlyMotor.getCurrentPosition() - step * pecentageTurnLenght;
         timer.reset();
         while ((godlyMotor.getCurrentPosition() > tp + koef || godlyMotor.getCurrentPosition() < tp - koef) && opMode.opModeIsActive() && timeA > timer.seconds()) {
+            mechTrain.setPowerOnMecanumBase(ballCannon.constantMechTrain * gamepad1.left_stick_x, ballCannon.constantMechTrain * gamepad1.left_stick_y, ballCannon.constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
             godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
             telemetry.addData("мощность на фильтр", godlyMotor.getPower());
             telemetry.update();
         }
-       t = timer.seconds();
+        t = timer.seconds();
         while (opMode.opModeIsActive() && timeRecycling + t > timer.seconds()) {
+            mechTrain.setPowerOnMecanumBase(ballCannon.constantMechTrain * gamepad1.left_stick_x, ballCannon.constantMechTrain * gamepad1.left_stick_y, ballCannon.constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
             godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
         }
-        while (((tp >  godlyMotor.getCurrentPosition())||tp < godlyMotor.getCurrentPosition())&&opMode.opModeIsActive()){
+        while (((tp > godlyMotor.getCurrentPosition()) || tp < godlyMotor.getCurrentPosition()) && opMode.opModeIsActive()) {
+            mechTrain.setPowerOnMecanumBase(ballCannon.constantMechTrain * gamepad1.left_stick_x, ballCannon.constantMechTrain * gamepad1.left_stick_y, ballCannon.constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
             godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
         }
         t = timer.seconds();
         while (opMode.opModeIsActive() && timeRecycling + t > timer.seconds()) {
+            mechTrain.setPowerOnMecanumBase(ballCannon.constantMechTrain * gamepad1.left_stick_x, ballCannon.constantMechTrain * gamepad1.left_stick_y, ballCannon.constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
             godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
         }
         t = timer.seconds();

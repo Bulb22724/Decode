@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class Intake {
     DcMotorEx intakeMotor;
+
     LinearOpMode opMode;
     // isOn хранит состояние intakeMotor работает.не работает
     boolean isOn = false;
