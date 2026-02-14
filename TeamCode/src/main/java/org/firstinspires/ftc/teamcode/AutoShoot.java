@@ -28,7 +28,7 @@ public class AutoShoot extends LinearOpMode {
 
         double shootingTime = 3;
         double pushingTime = 1;
-        mechTrain.moveBack(0.45, 7); //0.5
+        mechTrain.moveBack(0.45, 4); //0.5
 
         ballCannon.Shoot();
         mechTrain.moveLeft(0.45, 16);

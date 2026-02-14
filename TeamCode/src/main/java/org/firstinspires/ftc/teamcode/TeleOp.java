@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.modules.MechTrain;
 
@@ -16,6 +15,7 @@ public class TeleOp extends LinearOpMode {
     Filter filter;
     BallCannon ballCannon;
     Launcher launcher;
+    Intake intake;
     boolean stateButtonA = false;
     boolean stateY = false;
     boolean stateRightBumper = false;
@@ -29,6 +29,7 @@ public class TeleOp extends LinearOpMode {
         launcher = new Launcher(this);
         mechTrain = new MechTrain(this);
         filter = new Filter(this);
+        intake = new Intake(this);
         waitForStart();
         while (opModeIsActive()) {
             mechTrain.setPowerOnMecanumBase(0.75 * gamepad1.left_stick_x, 0.75 * gamepad1.left_stick_y, 0.75 * (gamepad1.left_trigger - gamepad1.right_trigger));
@@ -38,14 +39,14 @@ public class TeleOp extends LinearOpMode {
                 ballCannon.Shoot();
             }
             stateButtonA = gamepad2.a;
-            filter.easyFilter(gamepad2.left_trigger, gamepad2.right_trigger);
-            if (gamepad1.x) {
-                filter.difficultFilter(1);
+            filter.setPowerFilter(gamepad2.left_trigger, gamepad2.right_trigger);
+            if (gamepad2.x) {
+                filter.nextPosition(1);
             }
             ballCannon.pushMotor(gamepad2.right_stick_y);
 
             if (gamepad2.b) {
-                filter.difficultFilter(0.5);
+                filter.nextPosition(0.5);
             }
             if (!gamepad2.y && stateY) {
                 if (filter.isValveOpen) {
@@ -63,12 +64,15 @@ public class TeleOp extends LinearOpMode {
             if (!gamepad2.right_bumper && stateRightBumper) {
                 //filter.right();
             }
-            if (gamepad1.y && !yState) {
-                filter.fun();
-            }
 
             yState = gamepad1.y;
             stateRightBumper = gamepad2.right_bumper;
+            if (gamepad1.a) {
+                intake.onOrOff();
+            }
+            if (gamepad1.b) {
+                intake.reversIntake();
+            }
             // 1. выведи все переменные в консол
             // 2. выведи в консоль управлять
             telemetry.addData("ballPushingMotorPos", ballCannon.ballPushingServo.getPosition());

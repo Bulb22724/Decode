@@ -35,19 +35,19 @@ public class AutoShootCamera extends LinearOpMode {
         AprilTagWebcam.ColorSequense colors = camera.getColorSequense();
         switch (camera.getColorSequense()) {
             case GPP:
-                filter.difficultFilter(1.5);
+                filter.nextPosition(1.5);
                 ballCannon.Shoot();
                 break;
             case PGP:
-                filter.difficultFilter(0.5);
+                filter.nextPosition(0.5);
                 ballCannon.Shoot();
                 break;
             case PPG:
-                filter.difficultFilter(-0.5);
+                filter.nextPosition(-0.5);
                 ballCannon.Shoot();
                 break;
             case NOTFOUND:
-                filter.difficultFilter(0.5);
+                filter.nextPosition(0.5);
                 ballCannon.Shoot();
         }
         //mechTrain.moveLeft(0.45, 16);

@@ -1,15 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.modules.AprilTagWebcam;
+import org.firstinspires.ftc.teamcode.modules.MechTrain;
 
 @Config
 public class BallCannon {
@@ -18,6 +24,7 @@ public class BallCannon {
     DcMotorEx shootingMotor;
     DcMotorEx ballPushingMotor;
     Servo ballPushingServo;
+    MechTrain mechTrain;
 
     //
     int ticks = 288;
@@ -27,7 +34,7 @@ public class BallCannon {
     boolean modeShootingMotor = false;
     boolean stateButtonB = false;
     boolean stateButtonA = false;
-    public static double nullPosition = 0.6;
+    public static double nullPosition = 0.7;
     public static double pushPower = 1;
     public static double shootPower = -1;
     public static double timerForShoot = 4;
@@ -56,6 +63,8 @@ public class BallCannon {
         ballPushingServo = opMode.hardwareMap.get(Servo.class, "ballPushingServo");
         ballPushingMotor = opMode.hardwareMap.get(DcMotorEx.class, "ballPushingMotor");
         filter = new Filter(opMode);
+        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), opMode.telemetry);
+
     }
 
     public void shootOn() {
@@ -153,6 +162,20 @@ public class BallCannon {
         timer.reset();
         shootingMotor.setPower(shootPower);
         while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive()) ;
+        telemetry.addData("скорость колеса пушки", shootingMotor.getVelocity(AngleUnit.RADIANS));
+        telemetry.update();
+        ballPushingServo.setPosition(ballPushingPosition);
+        timer.reset();
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
+        ballPushingServo.setPosition(nullPosition);
+        timer.reset();
+        telemetry.addData("скорость колеса пушки", shootingMotor.getVelocity(AngleUnit.RADIANS));
+        telemetry.update();
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
+        telemetry.addData("скорость колеса пушки", shootingMotor.getVelocity(AngleUnit.RADIANS));
+        telemetry.update();
+        filter.nextPosition(1);
+
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
         while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
@@ -160,16 +183,7 @@ public class BallCannon {
         timer.reset();
         while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
 
-        filter.difficultFilter(1);
-
-        ballPushingServo.setPosition(ballPushingPosition);
-        timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
-        ballPushingServo.setPosition(nullPosition);
-        timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) ;
-
-        filter.difficultFilter(1);
+        filter.nextPosition(1);
 
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();

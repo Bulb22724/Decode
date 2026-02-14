@@ -18,7 +18,7 @@ public class Intake {
     // хранит направление вращения intakeMotor
     boolean isIn = true;
     // absMotorPower хранит модуль мощности intakeMotor
-    public static double absMotorPower = 0.5;
+    public static double motorPower = 1;
 
     public Intake(LinearOpMode opMode) {
         intakeMotor = opMode.hardwareMap.get(DcMotorEx.class, "intakeMotor");
@@ -29,52 +29,44 @@ public class Intake {
     /**
      * on включает intakeMotor с мощностью absMotorPower
      */
-    public void on() {
-        if (!isOn) {
-            isOn = true;
-            intakeMotor.setPower(absMotorPower);
-        }
-
-    }
-
-    /**
-     * off выключает intakeMotor
-     */
-    public void off() {
+    public void onOrOff() {
         if (isOn) {
             isOn = false;
             intakeMotor.setPower(0);
         }
+        else {
+            intakeMotor.setPower(motorPower);
+            isOn = true;
+        }
 
     }
+    public void threeBallsIntake() {
+
+    }
+    /**
+     * off выключает intakeMotor
+     */
+
 
     /**
      * in изменяет направление вращения intakeMotor
      */
-    public void in() {
-        if (!isIn) {
-            isIn = true;
-            intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        }
+    public void reversIntake() {
+        motorPower=-motorPower;
 
     }
+
+
 
     /**
      * out изменяет направление вращения intakeMotor
      */
-    public void out() {
-        if (isIn) {
-            isIn = false;
-            intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
-    }
-
     public void addData() {
         Telemetry telemetry = opMode.telemetry;
         telemetry.addData("Направление захвата", intakeMotor.getDirection());
         telemetry.addData("мотор включен", isOn);
         telemetry.addData("мотор вращается внутрь", isIn);
-        telemetry.addData("модуль мощности мотора", absMotorPower);
+        telemetry.addData("модуль мощности мотора", motorPower);
         telemetry.addData("скорость вращения мотора", intakeMotor.getVelocity());
     }
 }

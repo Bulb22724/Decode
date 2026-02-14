@@ -6,22 +6,20 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
 @Config
 public class Filter {
     Servo valveServo;
     DcMotorEx godlyMotor;
+    Servo rotateServo;
     LinearOpMode opMode;
     private ElapsedTime timer = new ElapsedTime();
     public static double valveOpenPosition = 0;
+
     public static double valveClosedPosition = 1;
     public static double timeA = 1;
     boolean isValveOpen = false;
@@ -47,11 +45,14 @@ public class Filter {
 
     public Filter(LinearOpMode opMode) {
         valveServo = opMode.hardwareMap.get(Servo.class, "valveServo");
+        rotateServo = opMode.hardwareMap.get(Servo.class, "rotateServo");
         godlyMotor = opMode.hardwareMap.get(DcMotorEx.class, "godlyMotor");
         this.opMode = opMode;
 //        fanServo.setPosition(minPosition);
         valveServo.setPosition(valveClosedPosition);
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), opMode.telemetry);
+        double angle = rotateServo.getPosition();
+        rotateServo.setPosition(angle);
     }
 //    public void setPosition(int numberPosition) {
 //        fanServo.setPosition(minPosition + (numberPosition) * step);
@@ -88,12 +89,12 @@ public class Filter {
         godlyMotor.setPower(0);
     }
 
-    public void easyFilter(double powerL, double powerR) {
+    public void setPowerFilter(double powerL, double powerR) {
         godlyMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         godlyMotor.setPower(powerL - powerR);
     }
 
-    public void difficultFilter(double pecentageTurnLenght) {
+    public void nextPosition(double pecentageTurnLenght) {
         godlyMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tp = godlyMotor.getCurrentPosition() - step*pecentageTurnLenght;
         timer.reset();

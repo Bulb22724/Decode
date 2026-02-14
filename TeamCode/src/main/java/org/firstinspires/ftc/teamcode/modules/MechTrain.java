@@ -79,17 +79,18 @@ public class MechTrain {
 //                frontRight.setPower(0);
 //
 //            }
-            if (Math.abs(frontLeft.getCurrentPosition()) > targetPosition) {
-                frontLeft.setPower(0);
-            }
+//            if (Math.abs(frontLeft.getCurrentPosition()) > targetPosition) {
+//                frontLeft.setPower(0);
+//            }
             if (Math.abs(backRight.getCurrentPosition()) > targetPosition) {
                 backRight.setPower(0);
                 frontRight.setPower(0);
-
-            }
-            if (Math.abs(backLeft.getCurrentPosition()) > targetPosition) {
+                frontLeft.setPower(0);
                 backLeft.setPower(0);
             }
+//            if (Math.abs(backLeft.getCurrentPosition()) > targetPosition) {
+//                backLeft.setPower(0);
+//            }
         }
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
