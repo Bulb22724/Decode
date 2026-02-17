@@ -8,22 +8,30 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.modules.MechTrain;
 
 @Config
 public class Intake {
     DcMotorEx intakeMotor;
+    ColorDetector colorDetector;
     LinearOpMode opMode;
+    MechTrain mechTrain;
+    Filter filter;
+
     // isOn хранит состояние intakeMotor работает.не работает
     boolean isOn = false;
     // хранит направление вращения intakeMotor
     boolean isIn = true;
     // absMotorPower хранит модуль мощности intakeMotor
     public static double motorPower = 1;
+    public static double k = 0.75;
 
     public Intake(LinearOpMode opMode) {
+        this.opMode = opMode;
         intakeMotor = opMode.hardwareMap.get(DcMotorEx.class, "intakeMotor");
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        this.opMode = opMode;
+        mechTrain = new MechTrain(opMode);
+        filter = new Filter(opMode);
     }
 
     /**
@@ -41,6 +49,16 @@ public class Intake {
 
     }
     public void threeBallsIntake() {
+        filter.nextPosition(0.5);
+    for (int i = 0; i < 3; i++) {
+        intakeMotor.setPower(1);
+        while (!colorDetector.ballIsReady() && opMode.opModeIsActive() && !opMode.gamepad1.a) {
+            mechTrain.setPowerOnMecanumBase(k * opMode.gamepad1.left_stick_x, k * opMode.gamepad1.left_stick_y, k * (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
+        }
+        mechTrain.setPowerOnMecanumBase(0, 0, 0);
+        intakeMotor.setPower(0);
+        filter.nextPosition(1);
+    }
 
     }
     /**
