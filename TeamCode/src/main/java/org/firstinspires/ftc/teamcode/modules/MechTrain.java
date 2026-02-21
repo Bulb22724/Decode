@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class MechTrain {
+public class MechTrain extends Thread{
     DcMotor frontLeft, frontRight, backLeft, backRight;
     double encoderResolution = 751.8;
     int wheelDiameterMM = 104;
@@ -52,6 +52,13 @@ public class MechTrain {
         backRight.setPower(g1x - g1y + g1tr);
     }
 
+
+    public void run() {
+        frontLeft.setPower(-opMode.gamepad1.left_stick_x + opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
+        frontRight.setPower(-opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
+        backLeft.setPower(opMode.gamepad1.left_stick_x + opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
+        backRight.setPower(opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
+    }
 
     /**
      * rideTic едет с мощностью motorPowerY вперед или назад до позиции targetPosition

@@ -126,23 +126,14 @@ public class BallCannon {
     public void Shoot1() {
         timer.reset();
         shootingMotor.setPower(shootPower);
-        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive()) {
-            mechTrain.setPowerOnMecanumBase(constantMechTrain * gamepad1.left_stick_x, constantMechTrain * gamepad1.left_stick_y, constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
-            ;
-        }
+        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive());
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()){
-            mechTrain.setPowerOnMecanumBase(constantMechTrain * gamepad1.left_stick_x, constantMechTrain * gamepad1.left_stick_y, constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
-        ;
-    }
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
         ballPushingServo.setPosition(nullPosition);
         shootingMotor.setPower(0);
         timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) {
-            mechTrain.setPowerOnMecanumBase(constantMechTrain * gamepad1.left_stick_x, constantMechTrain * gamepad1.left_stick_y, constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
-            ;
-        }
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
 
     }
 
@@ -168,50 +159,36 @@ public class BallCannon {
     public void Shoot() {
         timer.reset();
         shootingMotor.setPower(shootPower);
-        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive()){
-            mechTrain.setPowerOnMecanumBase(constantMechTrain * gamepad1.left_stick_x, constantMechTrain * gamepad1.left_stick_y, constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
-        }
+        while ((timerForShoot > timer.seconds()) && opMode.opModeIsActive());
         telemetry.addData("скорость колеса пушки", shootingMotor.getVelocity(AngleUnit.RADIANS));
         telemetry.update();
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()){
-            mechTrain.setPowerOnMecanumBase(constantMechTrain * gamepad1.left_stick_x, constantMechTrain * gamepad1.left_stick_y, constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
-        }
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
         ballPushingServo.setPosition(nullPosition);
         timer.reset();
         telemetry.addData("скорость колеса пушки", shootingMotor.getVelocity(AngleUnit.RADIANS));
         telemetry.update();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) {
-            mechTrain.setPowerOnMecanumBase(constantMechTrain * gamepad1.left_stick_x, constantMechTrain * gamepad1.left_stick_y, constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
-        }
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
         telemetry.addData("скорость колеса пушки", shootingMotor.getVelocity(AngleUnit.RADIANS));
         telemetry.update();
         filter.nextPosition(1);
 
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) {
-            mechTrain.setPowerOnMecanumBase(constantMechTrain * gamepad1.left_stick_x, constantMechTrain * gamepad1.left_stick_y, constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
-        }
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
         ballPushingServo.setPosition(nullPosition);
         timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) {
-            mechTrain.setPowerOnMecanumBase(0,0,0);
-        }
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
 
         filter.nextPosition(1);
 
         ballPushingServo.setPosition(ballPushingPosition);
         timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) {
-            mechTrain.setPowerOnMecanumBase(constantMechTrain * gamepad1.left_stick_x, constantMechTrain * gamepad1.left_stick_y, constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
-        }
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
         ballPushingServo.setPosition(nullPosition);
         timer.reset();
-        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive()) {
-            mechTrain.setPowerOnMecanumBase(constantMechTrain * gamepad1.left_stick_x, constantMechTrain * gamepad1.left_stick_y, constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
-        }
+        while ((timeForPush > timer.seconds()) && opMode.opModeIsActive());
 
         shootingMotor.setPower(0);
 

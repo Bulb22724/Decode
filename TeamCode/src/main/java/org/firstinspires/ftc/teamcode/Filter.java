@@ -90,8 +90,7 @@ public class Filter {
         godlyMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         timer.reset();
         while (time > timer.seconds() && opMode.opModeIsActive()) {
-            mechTrain.setPowerOnMecanumBase(ballCannon.constantMechTrain * gamepad1.left_stick_x, ballCannon.constantMechTrain * gamepad1.left_stick_y, ballCannon.constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
-            godlyMotor.setPower(powerL - powerR);
+           godlyMotor.setPower(powerL - powerR);
         }
         godlyMotor.setPower(0);
     }
@@ -106,23 +105,19 @@ public class Filter {
         tp = godlyMotor.getCurrentPosition() - step * pecentageTurnLenght;
         timer.reset();
         while ((godlyMotor.getCurrentPosition() > tp + koef || godlyMotor.getCurrentPosition() < tp - koef) && opMode.opModeIsActive() && timeA > timer.seconds()) {
-            mechTrain.setPowerOnMecanumBase(ballCannon.constantMechTrain * gamepad1.left_stick_x, ballCannon.constantMechTrain * gamepad1.left_stick_y, ballCannon.constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
             godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
             telemetry.addData("мощность на фильтр", godlyMotor.getPower());
             telemetry.update();
         }
         t = timer.seconds();
         while (opMode.opModeIsActive() && timeRecycling + t > timer.seconds()) {
-            mechTrain.setPowerOnMecanumBase(ballCannon.constantMechTrain * gamepad1.left_stick_x, ballCannon.constantMechTrain * gamepad1.left_stick_y, ballCannon.constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
             godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
         }
         while (((tp > godlyMotor.getCurrentPosition()) || tp < godlyMotor.getCurrentPosition()) && opMode.opModeIsActive()) {
-            mechTrain.setPowerOnMecanumBase(ballCannon.constantMechTrain * gamepad1.left_stick_x, ballCannon.constantMechTrain * gamepad1.left_stick_y, ballCannon.constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
             godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
         }
         t = timer.seconds();
         while (opMode.opModeIsActive() && timeRecycling + t > timer.seconds()) {
-            mechTrain.setPowerOnMecanumBase(ballCannon.constantMechTrain * gamepad1.left_stick_x, ballCannon.constantMechTrain * gamepad1.left_stick_y, ballCannon.constantMechTrain * (gamepad1.left_trigger - gamepad1.right_trigger));
             godlyMotor.setPower((tp - godlyMotor.getCurrentPosition()) / k);
         }
         t = timer.seconds();
