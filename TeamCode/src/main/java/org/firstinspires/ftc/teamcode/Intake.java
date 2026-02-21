@@ -25,6 +25,8 @@ public class Intake {
     // absMotorPower хранит модуль мощности intakeMotor
     public static double motorPower = 1;
     public static double k = 0.75;
+    public int greenPos = 0;
+    public int rotateCycle = 0;
 
     public Intake(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -52,13 +54,23 @@ public class Intake {
         filter.nextPosition(0.5);
     for (int i = 0; i < 3; i++) {
         intakeMotor.setPower(1);
-        while (!colorDetector.ballIsReady() && opMode.opModeIsActive() && !opMode.gamepad1.a) {
-            mechTrain.setPowerOnMecanumBase(k * opMode.gamepad1.left_stick_x, k * opMode.gamepad1.left_stick_y, k * (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
-        }
-        mechTrain.setPowerOnMecanumBase(0, 0, 0);
+        while (!colorDetector.ballIsReady() && opMode.opModeIsActive() && !opMode.gamepad1.a);
         intakeMotor.setPower(0);
         filter.nextPosition(1);
     }
+        filter.nextPosition(0.5);
+    }
+    public void threeBallsAndSortIntake() {
+        filter.nextPosition(0.5);
+        for (int i = 0; i < 3; i++) {
+            intakeMotor.setPower(1);
+            while (!colorDetector.ballIsReady() && opMode.opModeIsActive() && !opMode.gamepad1.a);
+            if (colorDetector.isGreen()) {greenPos = rotateCycle;}
+            intakeMotor.setPower(0);
+            filter.nextPosition(1);
+            rotateCycle += 1;
+        }
+        filter.nextPosition(rotateCycle-2.5);
 
     }
     /**
