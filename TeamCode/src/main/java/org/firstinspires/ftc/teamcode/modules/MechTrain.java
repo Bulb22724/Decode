@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MechTrain extends Thread{
+
     DcMotor frontLeft, frontRight, backLeft, backRight;
     double encoderResolution = 751.8;
     int wheelDiameterMM = 104;
@@ -54,10 +55,13 @@ public class MechTrain extends Thread{
 
 
     public void run() {
+        Telemetry telemetry = opMode.telemetry;
         frontLeft.setPower(-opMode.gamepad1.left_stick_x + opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
         frontRight.setPower(-opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
         backLeft.setPower(opMode.gamepad1.left_stick_x + opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
         backRight.setPower(opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
+        telemetry.addLine("Поток работает");
+        telemetry.update();
     }
 
     /**

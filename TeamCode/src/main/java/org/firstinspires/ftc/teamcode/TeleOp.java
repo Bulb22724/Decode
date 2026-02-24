@@ -33,6 +33,7 @@ public class TeleOp extends LinearOpMode {
         waitForStart();
         mechTrain.start();
         while (opModeIsActive()) {
+            mechTrain.setPowerOnMecanumBase(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.left_trigger-gamepad1.right_trigger);
 //            ballCannon.setPower(-gamepad2.right_stick_y);
             if (stateButtonA && !gamepad2.a) {
                 ballCannon.Shoot();
