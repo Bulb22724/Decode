@@ -47,7 +47,7 @@ public class MechTrain extends Thread{
      * @param g1tr мощьность поворота
      */
     public void setPowerOnMecanumBase(double g1x, double g1y, double g1tr) {
-        frontLeft.setPower(-g1x + g1y + g1tr);
+        frontLeft.setPower(g1x - g1y + g1tr);
         frontRight.setPower(-g1x - g1y + g1tr);
         backLeft.setPower(g1x + g1y + g1tr);
         backRight.setPower(g1x - g1y + g1tr);
@@ -56,7 +56,7 @@ public class MechTrain extends Thread{
 
     public void run() {
         Telemetry telemetry = opMode.telemetry;
-        frontLeft.setPower(-opMode.gamepad1.left_stick_x + opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
+        frontLeft.setPower(opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
         frontRight.setPower(-opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
         backLeft.setPower(opMode.gamepad1.left_stick_x + opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
         backRight.setPower(opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));

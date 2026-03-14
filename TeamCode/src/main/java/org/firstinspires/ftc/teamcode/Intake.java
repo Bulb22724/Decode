@@ -20,6 +20,7 @@ public class Intake {
 
     // isOn хранит состояние intakeMotor работает.не работает
     boolean isOn = false;
+    boolean run = false;
     // хранит направление вращения intakeMotor
     boolean isIn = true;
     // absMotorPower хранит модуль мощности intakeMotor
@@ -34,6 +35,8 @@ public class Intake {
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         mechTrain = new MechTrain(opMode);
         filter = new Filter(opMode);
+        colorDetector = new ColorDetector();
+        colorDetector.colorDetector(opMode);
     }
 
     /**
@@ -51,19 +54,23 @@ public class Intake {
 
     }
     public void threeBallsIntake() {
+        run = true;
         filter.nextPosition(0.5);
     for (int i = 0; i < 3; i++) {
-        intakeMotor.setPower(1);
-        while (!colorDetector.ballIsReady() && opMode.opModeIsActive() && !opMode.gamepad1.a);
+        intakeMotor.setPower(-1);
+        while (!colorDetector.ballIsReady() && opMode.opModeIsActive() && !opMode.gamepad1.a) {
+            mechTrain.setPowerOnMecanumBase(opMode.gamepad1.left_stick_x, opMode.gamepad1.left_stick_y, opMode.gamepad1.left_trigger-opMode.gamepad1.right_trigger);
+            if (opMode.gamepad1.a){run = false;}
+        }
         intakeMotor.setPower(0);
-        filter.nextPosition(1);
-    }
+        if (run) {filter.nextPosition(1);}
+        }
         filter.nextPosition(0.5);
     }
     public void threeBallsAndSortIntake() {
         filter.nextPosition(0.5);
         for (int i = 0; i < 3; i++) {
-            intakeMotor.setPower(1);
+            intakeMotor.setPower(-1);
             while (!colorDetector.ballIsReady() && opMode.opModeIsActive() && !opMode.gamepad1.a);
             if (colorDetector.isGreen()) {greenPos = rotateCycle;}
             intakeMotor.setPower(0);

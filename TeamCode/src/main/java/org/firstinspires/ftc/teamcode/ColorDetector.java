@@ -17,9 +17,9 @@ public class ColorDetector {
     static double greenMax = 180;
     static double violetMin = 240;
     static double violetMax = 340;
-    double red = colorSensor.red() / 255;
-    double blue = colorSensor.blue() / 255;
-    double green = colorSensor.green() / 255;
+    //double red = colorSensor.red() / 255;
+    //double blue = colorSensor.blue() / 255;
+    //double green = colorSensor.green() / 255;
 
     public void colorDetector(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -58,21 +58,21 @@ public class ColorDetector {
 
     public boolean isGreen() {
         currentColor();
-        return greenMin < h && h < greenMax;
+        return (greenMin < h && h < greenMax);
     }
     public boolean ballIsReady() {
         currentColor();
-        return isGreen() || isPurple();
+        return (isGreen() || isPurple());
     }
 
     private boolean isPurple() {
-        return violetMin < h && h < violetMax;
+        return (violetMin < h && h < violetMax);
     }
 
     public void addData() {
         Telemetry telemetry = opMode.telemetry;
         currentColor();
-        telemetry.addData("RGB/255", "%3.2f %3.2f %3.2", red, green, blue);
+        //telemetry.addData("RGB/255", "%3.2f %3.2f %3.2", red, green, blue);
         telemetry.addData("Промежуток зеленого в hsv", "%3.2 %3.2", greenMin, greenMax);
         telemetry.addData("Промежуток фиолетого в hsv", "%3.2 %3.2", violetMin, violetMax);
         telemetry.addData("текущий цвет по h в hsv", h);
