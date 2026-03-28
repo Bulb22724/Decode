@@ -5,6 +5,7 @@ import android.graphics.Path;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -13,6 +14,13 @@ public class MechTrain extends Thread{
     DcMotor frontLeft, frontRight, backLeft, backRight;
     double encoderResolution = 751.8;
     int wheelDiameterMM = 104;
+    static double koefp = 1;
+    static double koefi = 1;
+    static double koefd = 1;
+    static double p = 10;
+    double timeMax = 5;
+    private ElapsedTime timer = new ElapsedTime();
+
     LinearOpMode opMode;
 
     public MechTrain(LinearOpMode opMode) {
@@ -103,10 +111,30 @@ public class MechTrain extends Thread{
 //                backLeft.setPower(0);
 //            }
         }
+
+
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+    public void rideTicPID(double tp) {
+        double efl = tp - frontLeft.getCurrentPosition();
+        double efr = tp - frontRight.getCurrentPosition();
+        double ebl = tp - backLeft.getCurrentPosition();
+        double ebr = tp - backRight.getCurrentPosition();
+        timer.startTime();
+        while (((-p < efl && efl < p) && (-p < efr && efr < p) && (-p < ebl && ebl < p) && (-p < ebr && ebr < p)) || timer.seconds() < timeMax)  {
+            frontLeft.setPower(koefp*(efl));
+            frontRight.setPower(koefp*(efr));
+            backLeft.setPower(koefp*(ebl));
+            backRight.setPower(koefp*(ebr));
+            efl = tp - frontLeft.getCurrentPosition();
+            efr = tp - frontRight.getCurrentPosition();
+            ebl = tp - backLeft.getCurrentPosition();
+            ebr = tp - backRight.getCurrentPosition();
+
+        }
     }
 
     /**
