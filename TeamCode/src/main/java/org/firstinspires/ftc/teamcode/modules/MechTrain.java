@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class MechTrain extends Thread{
+public class MechTrain extends Thread {
 
     DcMotor frontLeft, frontRight, backLeft, backRight;
     double encoderResolution = 751.8;
@@ -17,8 +17,15 @@ public class MechTrain extends Thread{
     static double koefp = 1;
     static double koefi = 1;
     static double koefd = 1;
+    static double koefPd = 1;
+    static double koefPi = 1;
+    static double tDiscr = 1;
+    double koefIdiscr = koefp * koefPi * tDiscr;
+    double koefDdiscr = koefp * koefPd / tDiscr;
     static double p = 10;
     double timeMax = 5;
+    double time1 = 0;
+    double time2 = 0;
     private ElapsedTime timer = new ElapsedTime();
 
     LinearOpMode opMode;
@@ -34,16 +41,20 @@ public class MechTrain extends Thread{
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        timer.startTime();
         this.opMode = opMode;
     }
 
     public void telem() {
         Telemetry telemetry = opMode.telemetry;
+        time1 = timer.seconds();
         telemetry.addLine("мощности, позиции и растояние моторов 1-передний левый мотор 2-передний правый мотор 3-задний левый мотор 4-задний правый мотор");
         for (DcMotor motor : new DcMotor[]{frontLeft, frontRight, backLeft, backRight}) {
             telemetry.addData("Мощность", motor.getPower());
             telemetry.addData("Позиция", motor.getCurrentPosition());
-            telemetry.addData("Растояние", (motor.getCurrentPosition()/encoderResolution)*wheelDiameterMM*Math.PI);
+            telemetry.addData("Растояние", (motor.getCurrentPosition() / encoderResolution) * wheelDiameterMM * Math.PI);
+            telemetry.addData("Время дискретизации", time1-time2);
+            time2 = time1;
         }
     }
 
@@ -118,21 +129,44 @@ public class MechTrain extends Thread{
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
     public void rideTicPID(double tp) {
         double efl = tp - frontLeft.getCurrentPosition();
         double efr = tp - frontRight.getCurrentPosition();
         double ebl = tp - backLeft.getCurrentPosition();
         double ebr = tp - backRight.getCurrentPosition();
+
+        double efl1 = 0;
+        double efr1 = 0;
+        double ebl1 = 0;
+        double ebr1 = 0;
+
+        double efl2 = 0;
+        double efr2 = 0;
+        double ebl2 = 0;
+        double ebr2 = 0;
+
         timer.startTime();
-        while (((-p < efl && efl < p) && (-p < efr && efr < p) && (-p < ebl && ebl < p) && (-p < ebr && ebr < p)) || timer.seconds() < timeMax)  {
-            frontLeft.setPower(koefp*(efl));
-            frontRight.setPower(koefp*(efr));
-            backLeft.setPower(koefp*(ebl));
-            backRight.setPower(koefp*(ebr));
+        while (((-p < efl && efl < p) && (-p < efr && efr < p) && (-p < ebl && ebl < p) && (-p < ebr && ebr < p)) || timer.seconds() < timeMax) {
             efl = tp - frontLeft.getCurrentPosition();
             efr = tp - frontRight.getCurrentPosition();
             ebl = tp - backLeft.getCurrentPosition();
             ebr = tp - backRight.getCurrentPosition();
+            frontLeft.setPower(koefIdiscr * efl + koefp * (efl - efl1) + koefDdiscr * (efl - 2 * efl1 - efl2));
+            frontRight.setPower(koefIdiscr * efr + koefp * (efr - efr1) + koefDdiscr * (efr - 2 * efr1 - efr2));
+            backLeft.setPower(koefIdiscr * ebl + koefp * (ebl - ebl1) + koefDdiscr * (ebl - 2 * ebl1 - ebl2));
+            backRight.setPower(koefIdiscr * ebr + koefp * (ebr - ebr1) + koefDdiscr * (ebr - 2 * ebr1 - ebr2));
+
+            efl2 = efl1;
+            efr2 = efr1;
+            ebl2 = ebl1;
+            ebr2 = ebr1;
+
+            efl1 = efl;
+            efr1 = efr;
+            ebl1 = ebl;
+            ebr1 = ebr;
+
 
         }
     }
