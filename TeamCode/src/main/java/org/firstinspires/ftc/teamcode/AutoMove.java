@@ -10,13 +10,12 @@ import org.firstinspires.ftc.teamcode.modules.MechTrain;
 @Autonomous
 @Config
 public class AutoMove extends LinearOpMode {
-    public static double tP = 18;
+    public static double tP = 180;
 
     public void runOpMode() {
         MechTrain mechTrain = new MechTrain(this);
         waitForStart();
-        sleep(20000);
-        mechTrain.moveBack(0.5,tP);
+        mechTrain.rideTicPID(tP);
         }
 
 }

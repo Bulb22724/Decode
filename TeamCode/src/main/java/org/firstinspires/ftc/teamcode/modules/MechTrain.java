@@ -2,24 +2,25 @@ package org.firstinspires.ftc.teamcode.modules;
 
 import android.graphics.Path;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
+@Config
 public class MechTrain extends Thread {
 
     DcMotor frontLeft, frontRight, backLeft, backRight;
     double encoderResolution = 751.8;
     int wheelDiameterMM = 104;
-    static double koefp = 1;
-    static double koefi = 1;
-    static double koefd = 1;
-    static double koefPd = 1;
-    static double koefPi = 1;
-    static double tDiscr = 1;
+    public static double koefp = 0.01;
+    public static double koefi = 1;
+    public static double koefd = 1;
+    public static double koefPd = 0;
+    public static double koefPi = 0;
+    public static double tDiscr = 0.025;
     double koefIdiscr = koefp * koefPi * tDiscr;
     double koefDdiscr = koefp * koefPd / tDiscr;
     static double p = 10;
@@ -131,6 +132,16 @@ public class MechTrain extends Thread {
     }
 
     public void rideTicPID(double tp) {
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         double efl = tp - frontLeft.getCurrentPosition();
         double efr = tp - frontRight.getCurrentPosition();
         double ebl = tp - backLeft.getCurrentPosition();
@@ -147,15 +158,22 @@ public class MechTrain extends Thread {
         double ebr2 = 0;
 
         timer.startTime();
-        while (((-p < efl && efl < p) && (-p < efr && efr < p) && (-p < ebl && ebl < p) && (-p < ebr && ebr < p)) || timer.seconds() < timeMax) {
+        while (opMode.opModeIsActive() && (((-p < efl && efl < p) || (-p < efr && efr < p) || (-p < ebl && ebl < p) || (-p < ebr && ebr < p)) || timer.seconds() < timeMax)) {
+            time1 = timer.seconds();
             efl = tp - frontLeft.getCurrentPosition();
-            efr = tp - frontRight.getCurrentPosition();
+            efr = tp + frontRight.getCurrentPosition();
             ebl = tp - backLeft.getCurrentPosition();
             ebr = tp - backRight.getCurrentPosition();
-            frontLeft.setPower(koefIdiscr * efl + koefp * (efl - efl1) + koefDdiscr * (efl - 2 * efl1 - efl2));
-            frontRight.setPower(koefIdiscr * efr + koefp * (efr - efr1) + koefDdiscr * (efr - 2 * efr1 - efr2));
-            backLeft.setPower(koefIdiscr * ebl + koefp * (ebl - ebl1) + koefDdiscr * (ebl - 2 * ebl1 - ebl2));
-            backRight.setPower(koefIdiscr * ebr + koefp * (ebr - ebr1) + koefDdiscr * (ebr - 2 * ebr1 - ebr2));
+            tDiscr = time1-time2;
+            koefDdiscr = koefp * koefPd / tDiscr;
+            koefIdiscr = koefp * koefPi * tDiscr;
+
+            frontLeft.setPower(koefp*efl);
+            frontRight.setPower(koefp*efr);
+            backLeft.setPower(koefp*ebl);
+            backRight.setPower(koefp*ebr);
+
+            time2 = time1;
 
             efl2 = efl1;
             efr2 = efr1;
