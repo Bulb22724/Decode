@@ -10,25 +10,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
-public class MechTrain extends Thread {
+public class MechTrain{
 
     DcMotor frontLeft, frontRight, backLeft, backRight;
     double encoderResolution = 751.8;
     int wheelDiameterMM = 104;
-    public static double koefp = 0.01;
-    public static double koefi = 1;
-    public static double koefd = 1;
-    public static double koefPd = 0;
-    public static double koefPi = 0;
-    public static double tDiscr = 0.025;
-    double koefIdiscr = koefp * koefPi * tDiscr;
-    double koefDdiscr = koefp * koefPd / tDiscr;
     static double p = 10;
     double timeMax = 5;
     double time1 = 0;
     double time2 = 0;
     private ElapsedTime timer = new ElapsedTime();
 
+    PID pid = new PID();
     LinearOpMode opMode;
 
     public MechTrain(LinearOpMode opMode) {
@@ -67,22 +60,22 @@ public class MechTrain extends Thread {
      * @param g1tr мощьность поворота
      */
     public void setPowerOnMecanumBase(double g1x, double g1y, double g1tr) {
-        frontLeft.setPower(g1x - g1y + g1tr);
-        frontRight.setPower(-g1x - g1y + g1tr);
-        backLeft.setPower(g1x + g1y + g1tr);
+        frontLeft.setPower(-g1x + g1y + g1tr);
+        frontRight.setPower(g1x + g1y + g1tr);
+        backLeft.setPower(-g1x - g1y + g1tr);
         backRight.setPower(g1x - g1y + g1tr);
     }
 
-
-    public void run() {
-        Telemetry telemetry = opMode.telemetry;
-        frontLeft.setPower(opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
-        frontRight.setPower(-opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
-        backLeft.setPower(opMode.gamepad1.left_stick_x + opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
-        backRight.setPower(opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
-        telemetry.addLine("Поток работает");
-        telemetry.update();
-    }
+//
+//    public void run() {
+//        Telemetry telemetry = opMode.telemetry;
+//        frontLeft.setPower(opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
+//        frontRight.setPower(-opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
+//        backLeft.setPower(opMode.gamepad1.left_stick_x + opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
+//        backRight.setPower(opMode.gamepad1.left_stick_x - opMode.gamepad1.left_stick_y + (opMode.gamepad1.left_trigger - opMode.gamepad1.right_trigger));
+//        telemetry.addLine("Поток работает");
+//        telemetry.update();
+//    }
 
     /**
      * rideTic едет с мощностью motorPowerY вперед или назад до позиции targetPosition
@@ -132,6 +125,7 @@ public class MechTrain extends Thread {
     }
 
     public void rideTicPID(double tp) {
+        pid.setTargetPosition(tp);
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -142,49 +136,16 @@ public class MechTrain extends Thread {
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        double efl = tp - frontLeft.getCurrentPosition();
-        double efr = tp - frontRight.getCurrentPosition();
-        double ebl = tp - backLeft.getCurrentPosition();
-        double ebr = tp - backRight.getCurrentPosition();
+        frontLeft.setPower(pid.getPower(frontLeft.getCurrentPosition()));
+        frontRight.setPower(pid.getPower(frontRight.getCurrentPosition()));
+        backLeft.setPower(-pid.getPower(backLeft.getCurrentPosition()));
+        backRight.setPower(-pid.getPower(backRight.getCurrentPosition()));
 
-        double efl1 = 0;
-        double efr1 = 0;
-        double ebl1 = 0;
-        double ebr1 = 0;
-
-        double efl2 = 0;
-        double efr2 = 0;
-        double ebl2 = 0;
-        double ebr2 = 0;
-
-        timer.startTime();
-        while (opMode.opModeIsActive() && (((-p < efl && efl < p) || (-p < efr && efr < p) || (-p < ebl && ebl < p) || (-p < ebr && ebr < p)) || timer.seconds() < timeMax)) {
-            time1 = timer.seconds();
-            efl = tp - frontLeft.getCurrentPosition();
-            efr = tp + frontRight.getCurrentPosition();
-            ebl = tp - backLeft.getCurrentPosition();
-            ebr = tp - backRight.getCurrentPosition();
-            tDiscr = time1-time2;
-            koefDdiscr = koefp * koefPd / tDiscr;
-            koefIdiscr = koefp * koefPi * tDiscr;
-
-            frontLeft.setPower(koefp*efl);
-            frontRight.setPower(koefp*efr);
-            backLeft.setPower(koefp*ebl);
-            backRight.setPower(koefp*ebr);
-
-            time2 = time1;
-
-            efl2 = efl1;
-            efr2 = efr1;
-            ebl2 = ebl1;
-            ebr2 = ebr1;
-
-            efl1 = efl;
-            efr1 = efr;
-            ebl1 = ebl;
-            ebr1 = ebr;
-
+        while (opMode.opModeIsActive() && (frontLeft.getPower() != 0 || frontRight.getPower() != 0 || backLeft.getPower() != 0 || backRight.getPower() != 0)) {
+            frontLeft.setPower(-pid.getPower(frontLeft.getCurrentPosition()));
+            frontRight.setPower(-pid.getPower(-frontRight.getCurrentPosition()));
+            backLeft.setPower(pid.getPower(backLeft.getCurrentPosition()));
+            backRight.setPower(pid.getPower(backRight.getCurrentPosition()));
 
         }
     }
