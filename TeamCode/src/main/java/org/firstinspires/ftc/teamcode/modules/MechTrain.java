@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+
 import android.graphics.Path;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,14 +24,17 @@ public class MechTrain{
     double time2 = 0;
     private ElapsedTime timer = new ElapsedTime();
 
-    PID pid = new PID();
+
     LinearOpMode opMode;
 
+    PID pid;
     public MechTrain(LinearOpMode opMode) {
         frontLeft = opMode.hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = opMode.hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = opMode.hardwareMap.get(DcMotor.class, "backLeft");
         backRight = opMode.hardwareMap.get(DcMotor.class, "backRight");
+
+        pid = new PID(opMode);
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -125,7 +131,9 @@ public class MechTrain{
     }
 
     public void rideTicPID(double tp) {
+        Telemetry telemetry = opMode.telemetry;
         pid.setTargetPosition(tp);
+
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -147,6 +155,7 @@ public class MechTrain{
             backLeft.setPower(pid.getPower(backLeft.getCurrentPosition()));
             backRight.setPower(pid.getPower(backRight.getCurrentPosition()));
 
+            telemetry.update();
         }
     }
 
