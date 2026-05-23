@@ -131,6 +131,7 @@ public class MechTrain{
     }
 
     public void rideTicPID(double tp) {
+        timer.reset();
         Telemetry telemetry = opMode.telemetry;
         pid.setTargetPosition(tp);
 
@@ -154,9 +155,10 @@ public class MechTrain{
             frontRight.setPower(-pid.getPower(-frontRight.getCurrentPosition()));
             backLeft.setPower(pid.getPower(backLeft.getCurrentPosition()));
             backRight.setPower(pid.getPower(backRight.getCurrentPosition()));
-
             telemetry.update();
         }
+        telemetry.addData("Время проезда", timer.seconds());
+        telemetry.update();
     }
 
     /**

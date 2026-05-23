@@ -67,10 +67,10 @@ public class TeleOp extends LinearOpMode {
 
             yState = gamepad1.y;
             stateRightBumper = gamepad2.right_bumper;
-            if (gamepad1.a) {
+            if (gamepad1.x) {
                 intake.threeBallsIntake();
             }
-            if (gamepad1.b) {
+            if (gamepad1.y) {
                 intake.reversIntake();
             }
             // 1. выведи все переменные в консол

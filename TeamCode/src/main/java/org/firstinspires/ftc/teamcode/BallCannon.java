@@ -47,6 +47,10 @@ public class BallCannon {
     public static double maxVelocity = 1200;
     public double constantMechTrain=0.75;
     boolean xState = false;
+    public static double time1 = 0.1;
+    public static double time2 = 0.13;
+    public static double time3 = 0.32;
+    public static double delay = 0.05;
     ElapsedTime timer = new ElapsedTime();
     LinearOpMode opMode;
     Filter filter;
@@ -74,6 +78,35 @@ public class BallCannon {
     public void shootOn() {
         shootingMotor.setPower(motorPower);
         isMotorOn = true;
+    }
+    public void music(){
+        shootingMotor.setPower(shootPower);
+        opMode.sleep((long)(time1 * 10e3));
+        shootingMotor.setPower(0);
+        opMode.sleep((long)(delay * 10e3));
+        shootingMotor.setPower(shootPower);
+        opMode.sleep((long)(time2 * 10e3));
+        shootingMotor.setPower(0);
+        opMode.sleep((long)(delay * 10e3));
+        shootingMotor.setPower(shootPower);
+        opMode.sleep((long)(time2 * 10e3));
+        shootingMotor.setPower(0);
+        opMode.sleep((long)(delay * 10e3));
+        shootingMotor.setPower(shootPower);
+        opMode.sleep((long)(time3 * 10e3));
+        shootingMotor.setPower(0);
+        opMode.sleep((long)(delay * 10e3));
+    }
+    public void shootOnOff(){
+        if (isMotorOn){
+            shootingMotor.setPower(0);
+            isMotorOn=false;
+        }
+        else {
+            isMotorOn=true;
+            shootingMotor.setPower(shootPower);
+        }
+
     }
 
 
@@ -123,6 +156,13 @@ public class BallCannon {
         telemetry.addData("скорость колеса пушки", shootingMotor.getVelocity(AngleUnit.RADIANS)*3.14);
     }
 
+    public void Push(){
+        timer.reset();
+        ballPushingServo.setPosition(ballPushingPosition);
+        while ((timeForPush>timer.seconds()) && opMode.opModeIsActive()){}
+        ballPushingServo.setPosition(nullPosition);
+
+    }
     public void Shoot1() {
         timer.reset();
         shootingMotor.setPower(shootPower);

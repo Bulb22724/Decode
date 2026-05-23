@@ -20,7 +20,7 @@ public class PID{
     LinearOpMode opMode;
     private ElapsedTime timer = new ElapsedTime();
     public  static  double kp = 0.03;
-    public static double ki = 0.01;
+    public static double ki = 0;
     public  static double kd = 0;
     public static  double kf = 0;
     double tNow = 0;
@@ -33,7 +33,7 @@ public class PID{
     double elast = 0;
     double u = 0;
     double minU = 0.2;
-    double maxI = 1;
+    double maxI = 20;
     double tp = 0;
     double tDiscr = 0.25;
     public PID(LinearOpMode opMode){
